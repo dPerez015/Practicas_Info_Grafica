@@ -4,7 +4,8 @@
 //GLFW
 #include <GLFW\glfw3.h>
 #include <iostream>
-#include <shader.hpp>
+#include "Shader.h"
+
 
 using namespace std;
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -16,6 +17,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 struct Color {
 	float R, G, B;
 };
+
 
 GLfloat positions[12] = { 
 -0.5f,0.f,0.f,
@@ -76,8 +78,8 @@ int main() {
 	triangleColor.G = 1;
 	triangleColor.B = 1;
 	//cargamos los shader
-	GLuint programID = LoadShaders("./src/SimpleVertexShader.vertexshader", "./src/SimpleFragmentShader.fragmentshader");
-
+	//Shader shader("./src/SimpleVertexShader.vertexshader", "./src/SimpleFragmentShader.fragmentshader");
+	Shader shader("./src/SimpleVertexShader.vertexshader", "./src/SimpleFragmentShader.fragmentshader");
 	// Definir el buffer de vertices
 	GLuint vbo, vao;
 	// Definir el EBO
@@ -114,6 +116,8 @@ int main() {
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//liberar el buffer de vertices
 	glBindVertexArray(0);
+
+	
 
 	//bucle de dibujado
 	while (!glfwWindowShouldClose(window) && stillGoingOn) {

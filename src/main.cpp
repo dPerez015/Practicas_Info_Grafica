@@ -16,7 +16,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 float lastFrameTime;
 float deltaTime;
-
+float AngularSpeed = 3.141592;
+float actualAngle=0;
 struct Color {
 	float R, G, B;
 };
@@ -126,12 +127,13 @@ int main() {
 	if (uniformSinus == -1) {
 		std::cout << "Uniform not found" << std::endl;
 	}
-
+	lastFrameTime = glfwGetTime();
 
 	//bucle de dibujado
 	while (!glfwWindowShouldClose(window) && stillGoingOn) {
 		deltaTime = glfwGetTime() - lastFrameTime;
-
+		lastFrameTime = glfwGetTime();
+		
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		//GLFW_KEY_X
@@ -142,8 +144,8 @@ int main() {
 
 		//establecer el shader
 		shader.USE();
-		
-		glUniform1f(uniformSinus,sin());
+		actualAngle = (actualAngle+AngularSpeed*deltaTime);
+		glUniform1f(uniformSinus,(sin(actualAngle)+1)/4);
 
 		//pitar el VAO
 		glBindVertexArray(vao);
@@ -167,7 +169,7 @@ int main() {
 	glDeleteBuffers(1,&vbo);
 	glDeleteBuffers(1,&ebo);
 
-	lastFrameTime = glfwGetTime();
+	
 	// Terminate GLFW, clearing any resources allocated by GLFW.
 	exit(EXIT_SUCCESS);
 }

@@ -8,9 +8,16 @@ uniform float Sinus;
 void main(){
 
     gl_Position.xyz = vertexPosition_modelspace;
+	if(gl_Position.y==0){
+		if(gl_Position.x<0){
+			gl_Position.x-=Sinus;
+		}
+		else{
+			gl_Position.x+=Sinus;
+		}
+	}
     gl_Position.w = 1.0;
 
-	//Fer servir hola
-	
+
 }
 

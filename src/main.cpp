@@ -16,7 +16,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 float lastFrameTime;
 float deltaTime;
-float AngularSpeed = 3.141592;
+float AngularSpeed =3.141592;
 float actualAngle=0;
 struct Color {
 	float R, G, B;
@@ -124,8 +124,13 @@ int main() {
 
 	//Variables uniform
 	GLuint uniformSinus = glGetUniformLocation(shader.Program, "Sinus");
+	GLuint height = glGetUniformLocation(shader.Program, "height");
+	
 	if (uniformSinus == -1) {
 		std::cout << "Uniform not found" << std::endl;
+	}
+	if (height == -1) {
+		std::cout << "height not found" << std::endl;
 	}
 	lastFrameTime = glfwGetTime();
 
@@ -146,7 +151,7 @@ int main() {
 		shader.USE();
 		actualAngle = (actualAngle+AngularSpeed*deltaTime);
 		glUniform1f(uniformSinus,(sin(actualAngle)+1)/4);
-
+		glUniform1i(height,screenHeight);
 		//pitar el VAO
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ebo);

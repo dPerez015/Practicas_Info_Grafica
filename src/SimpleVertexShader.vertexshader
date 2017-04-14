@@ -6,7 +6,7 @@ layout(location = 0) in vec3 vertexPosition_modelspace;
 uniform float Sinus;
 
 void main(){
-
+	
     gl_Position.xyz = vertexPosition_modelspace;
 	if(gl_Position.y==0){
 		if(gl_Position.x<0){
@@ -14,10 +14,9 @@ void main(){
 		}
 		else{
 			gl_Position.x+=Sinus;
-		}
+		}	
 	}
     gl_Position.w = 1.0;
-
-
+	
 }
 

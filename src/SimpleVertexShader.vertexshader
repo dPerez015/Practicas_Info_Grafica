@@ -3,11 +3,15 @@
 // Input vertex data, different for all executions of this shader.
 layout(location = 0) in vec3 vertexPosition_modelspace;
 
+out vec3 vertexPos;
+out vec3 vertexOriginalPos;
+
 uniform float Sinus;
 
 void main(){
 	
     gl_Position.xyz = vertexPosition_modelspace;
+	vertexOriginalPos= gl_Position.xyz;
 	if(gl_Position.y==0){
 		if(gl_Position.x<0){
 			gl_Position.x-=Sinus;
@@ -16,7 +20,9 @@ void main(){
 			gl_Position.x+=Sinus;
 		}	
 	}
-    gl_Position.w = 1.0;
+    vertexPos=gl_Position.xyz;
+
+	gl_Position.w = 1.0;
 	
 }
 

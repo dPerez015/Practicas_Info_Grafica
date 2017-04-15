@@ -124,13 +124,17 @@ int main() {
 
 	//Variables uniform
 	GLuint uniformSinus = glGetUniformLocation(shader.Program, "Sinus");
-	GLuint height = glGetUniformLocation(shader.Program, "height");
-	
+	//GLuint height = glGetUniformLocation(shader.Program, "height");
+	GLuint width = glGetUniformLocation(shader.Program, "width");
+
 	if (uniformSinus == -1) {
 		std::cout << "Uniform not found" << std::endl;
 	}
-	if (height == -1) {
-		std::cout << "height not found" << std::endl;
+	//if (height == -1) {
+	//	std::cout << "height not found" << std::endl;
+	//}
+	if (width == -1) {
+		std::cout << "width not found" << std::endl;
 	}
 	lastFrameTime = glfwGetTime();
 
@@ -151,7 +155,8 @@ int main() {
 		shader.USE();
 		actualAngle = (actualAngle+AngularSpeed*deltaTime);
 		glUniform1f(uniformSinus,(sin(actualAngle)+1)/4);
-		glUniform1i(height,screenHeight);
+		//glUniform1i(height,screenHeight);
+		glUniform1i(width, screenWithd);
 		//pitar el VAO
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ebo);

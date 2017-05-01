@@ -16,9 +16,16 @@ bool stillGoingOn = true;
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 float lastFrameTime;
+float currentTime;
 float deltaTime;
 float AngularSpeed = 3.141592;
 float actualAngle = 0;
+
+
+//variables para el mix de texturas
+float textureChangeSpeed = 1;
+float textureMixRate = 0;
+
 struct Color {
 	float R, G, B;
 };
@@ -130,22 +137,37 @@ int main() {
 #pragma endregion
 #pragma region Texturas	
 	//texturas
-	GLuint texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	GLuint texture[2];
+	glGenTextures(2, texture);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	
 	//load a la textura
-	int width, height;
-	unsigned char* image = SOIL_load_image("./src/texture.png", &width, &height, 0, SOIL_LOAD_RGB);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	int width[2], height[2];
+	unsigned char* image = SOIL_load_image("./src/texture.png", &width[0], &height[0], 0, SOIL_LOAD_RGB);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width[0], height[0], 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	image = SOIL_load_image("./src/texture2.jpg", &width[1], &height[1], 0, SOIL_LOAD_RGB);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width[0], height[0], 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
 #pragma endregion
 #pragma region Uniform Variables
 	//Variables uniform
@@ -154,10 +176,13 @@ int main() {
 
 	//bucle de dibujado
 	lastFrameTime = glfwGetTime();
-	while (!glfwWindowShouldClose(window) && stillGoingOn) {
-		deltaTime = glfwGetTime() - lastFrameTime;
-		lastFrameTime = glfwGetTime();
 
+	while (!glfwWindowShouldClose(window) && stillGoingOn) {
+		currentTime = glfwGetTime();
+		
+		deltaTime = currentTime - lastFrameTime;
+		lastFrameTime = currentTime;
+		
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 
@@ -166,9 +191,14 @@ int main() {
 		glClearColor(backgroundColor.R, backgroundColor.G, backgroundColor.B, 1.0);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glUniform1i(glGetUniformLocation(shader.Program, "Texture"), 0); 
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
+		glUniform1i(glGetUniformLocation(shader.Program, "Texture1"), 0); 
 		
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture[1]);
+		glUniform1i(glGetUniformLocation(shader.Program, "Texture2"), 1);
+		
+		glUniform1f(glGetUniformLocation(shader.Program, "rate"),textureMixRate );
 		//establecer el shader
 		shader.USE();
 
@@ -197,6 +227,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	//TODO, comprobar que la tecla pulsada es escape para cerrar la aplicación y la tecla w para cambiar a modo widwframe
 	if (key == GLFW_KEY_W&&action == GLFW_PRESS) {
 		useLines = !useLines;
+	}
+	else if (key==GLFW_KEY_UP && (action==GLFW_PRESS || action==GLFW_REPEAT)) {
+		textureMixRate += (textureChangeSpeed*deltaTime);
+		
+		if (textureMixRate > 1) {
+			textureMixRate = 1;
+		}
+		//cout << deltaTime << endl;
+		
+	}
+	else if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		textureMixRate -= (textureChangeSpeed*deltaTime*2);
+		if (textureMixRate < 0) {
+			textureMixRate = 0;
+		}
 	}
 	else if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS) {
 		stillGoingOn = false;

@@ -54,6 +54,7 @@ glm::mat4 transformMat;
 
 glm::vec3 translateVector;
 glm::vec3 scaleVector;
+float rotateSpeed=90;
 
 void flipTexture(GLfloat* arr, int offset,int stride, int count) {
 	for (int i = 0; i < count; i++) {
@@ -187,6 +188,9 @@ int main() {
 
 	transformMat = glm::scale(transformMat, scaleVector);
 	transformMat = glm::translate(transformMat, translateVector);
+	//pasamos la velocidad de rotacion a radianes
+	rotateSpeed *= glm::pi<float>()/180;
+
 #pragma endregion
 #pragma region Uniform Variables
 	//Variables uniform
@@ -251,18 +255,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	else if (key==GLFW_KEY_UP && (action==GLFW_PRESS || action==GLFW_REPEAT)) {
 		textureMixRate += (textureChangeSpeed*deltaTime);
-		
 		if (textureMixRate > 1) {
 			textureMixRate = 1;
 		}
-		//cout << deltaTime << endl;
-		
 	}
 	else if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
 		textureMixRate -= (textureChangeSpeed*deltaTime*2);
 		if (textureMixRate < 0) {
 			textureMixRate = 0;
 		}
+	}
+	else if (key==GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		transformMat = rotate(transformMat, rotateSpeed*deltaTime * 2, glm::vec3(0, 0, 1));
+	}
+	else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		transformMat = rotate(transformMat, -rotateSpeed*deltaTime * 2, glm::vec3(0, 0, 1));
 	}
 	else if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS) {
 		stillGoingOn = false;

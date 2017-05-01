@@ -7,6 +7,10 @@
 #include "Shader.h"
 
 #include <SOIL.h>
+//glm
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 
 using namespace std;
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -25,11 +29,10 @@ float actualAngle = 0;
 //variables para el mix de texturas
 float textureChangeSpeed = 1;
 float textureMixRate = 0;
-
+//info del cuadrado
 struct Color {
 	float R, G, B;
 };
-
 
 GLfloat vertices[] = {
 	// Positions          // Colors           // Texture Coords
@@ -38,12 +41,19 @@ GLfloat vertices[] = {
 	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
 	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // Top Left 
 };
-
-
 GLuint indices[6] = {
 	0,1,3,
 	1,2,3
 };
+
+//matrices
+glm::mat4 transformMat;
+//glm::mat4 translationMat;
+//glm::mat4 rotationMat;
+//glm::mat4 scaleMat;
+
+glm::vec3 translateVector;
+glm::vec3 scaleVector;
 
 void flipTexture(GLfloat* arr, int offset,int stride, int count) {
 	for (int i = 0; i < count; i++) {
@@ -169,6 +179,15 @@ int main() {
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 #pragma endregion
+
+#pragma region Matrices
+
+	scaleVector=glm::vec3(0.5,-0.5,0);
+	translateVector = glm::vec3(0.5,0.5,0);
+
+	transformMat = glm::scale(transformMat, scaleVector);
+	transformMat = glm::translate(transformMat, translateVector);
+#pragma endregion
 #pragma region Uniform Variables
 	//Variables uniform
 
@@ -199,6 +218,8 @@ int main() {
 		glUniform1i(glGetUniformLocation(shader.Program, "Texture2"), 1);
 		
 		glUniform1f(glGetUniformLocation(shader.Program, "rate"),textureMixRate );
+		
+		glUniformMatrix4fv(glGetUniformLocation(shader.Program,"transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat));
 		//establecer el shader
 		shader.USE();
 

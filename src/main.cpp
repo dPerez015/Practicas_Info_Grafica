@@ -48,6 +48,63 @@ GLuint indices[6] = {
 	1,2,3
 };
 
+GLfloat VertexBufferCube[] = {
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+	0.5f , -0.5f, -0.5f,  1.0f, 0.0f,
+	0.5f ,  0.5f, -0.5f,  1.0f, 1.0f,
+	0.5f ,  0.5f, -0.5f,  1.0f, 1.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	0.5f , -0.5f,  0.5f,  1.0f, 0.0f,
+	0.5f ,  0.5f,  0.5f,  1.0f, 1.0f,
+	0.5f ,  0.5f,  0.5f,  1.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+	0.5f ,  0.5f,  0.5f,  1.0f, 0.0f,
+	0.5f ,  0.5f, -0.5f,  1.0f, 1.0f,
+	0.5f , -0.5f, -0.5f,  0.0f, 1.0f,
+	0.5f , -0.5f, -0.5f,  0.0f, 1.0f,
+	0.5f , -0.5f,  0.5f,  0.0f, 0.0f,
+	0.5f ,  0.5f,  0.5f,  1.0f, 0.0f,
+
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	0.5f , -0.5f, -0.5f,  1.0f, 1.0f,
+	0.5f , -0.5f,  0.5f,  1.0f, 0.0f,
+	0.5f , -0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+	0.5f ,  0.5f, -0.5f,  1.0f, 1.0f,
+	0.5f ,  0.5f,  0.5f,  1.0f, 0.0f,
+	0.5f ,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};
+glm::vec3 CubesPositionBuffer[] = {
+	glm::vec3(0.0f ,  0.0f,  0.0f),
+	glm::vec3(2.0f ,  5.0f, -15.0f),
+	glm::vec3(-1.5f, -2.2f, -2.5f),
+	glm::vec3(-3.8f, -2.0f, -12.3f),
+	glm::vec3(2.4f , -0.4f, -3.5f),
+	glm::vec3(-1.7f,  3.0f, -7.5f),
+	glm::vec3(1.3f , -2.0f, -2.5f),
+	glm::vec3(1.5f ,  2.0f, -2.5f),
+	glm::vec3(1.5f ,  0.2f, -1.5f),
+	glm::vec3(-1.3f,  1.0f, -1.5f)
+};
+
+
 //matrices
 glm::mat4 transformMat;
 //glm::mat4 translationMat;
@@ -108,19 +165,20 @@ int main() {
 
 	//fondo
 	Color backgroundColor;
-	backgroundColor.R = 1;
-	backgroundColor.G = 1;
-	backgroundColor.B = 0;
+	backgroundColor.R = 0.1;
+	backgroundColor.G = 0.1;
+	backgroundColor.B = 0.1;
 
 	//cargamos los shader
 	//Shader shader("./src/SimpleVertexShader.vertexshader", "./src/SimpleFragmentShader.fragmentshader");
 	Shader shader("./src/textureVertex.vertexshader", "./src/textureFragment.fragmentshader");
 
-
+	glEnable(GL_DEPTH_TEST);
+	//glDepthFunc(GL_LESS);
 
 #pragma region Buffers
 	//girar las texturas
-	flipTexture(&vertices[0], 7, 8, 4);
+	flipTexture(&VertexBufferCube[0], 4, 5, 36);
 	// Definir el buffer de vertices
 	GLuint vbo, vao;
 	// Definir el EBO
@@ -137,20 +195,20 @@ int main() {
 	//Establecer el objeto (VAO)
 	//Declarar el VBO y el EBO
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBufferCube), VertexBufferCube, GL_STATIC_DRAW);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(CubesPositionBuffer), CubesPositionBuffer, GL_STATIC_DRAW);
 
 
 	//Establecer las propiedades de los vertices
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 	
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
+	//glEnableVertexAttribArray(2);
 
 	//liberar el buffer de vertices
 	glBindVertexArray(0);
@@ -191,9 +249,9 @@ int main() {
 #pragma endregion
 
 #pragma region Matrices
-	scaleVector=glm::vec3(1,1,0);
-	translateVector = glm::vec3(0,-0.5,0);
-	rotationX = glm::radians(60.f);
+	scaleVector=glm::vec3(1,1,1);
+	translateVector = glm::vec3(0,0,0);
+	rotationX = glm::radians(0.f);
 
 	transformMat = glm::scale(transformMat, scaleVector);
 	transformMat = glm::translate(transformMat, translateVector);
@@ -227,7 +285,7 @@ int main() {
 		glfwPollEvents();
 
 		//Establecer el color de fondo
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		glClearColor(backgroundColor.R, backgroundColor.G, backgroundColor.B, 1.0);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -253,7 +311,9 @@ int main() {
 
 		//pintar triangulos
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES,0,36);
+		
 		glBindVertexArray(0);
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
@@ -273,23 +333,30 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_W&&action == GLFW_PRESS) {
 		useLines = !useLines;
 	}
-	else if (key==GLFW_KEY_UP && (action==GLFW_PRESS || action==GLFW_REPEAT)) {
+	else if (key==GLFW_KEY_1 && (action==GLFW_PRESS || action==GLFW_REPEAT)) {
 		textureMixRate += (textureChangeSpeed*deltaTime);
 		if (textureMixRate > 1) {
 			textureMixRate = 1;
 		}
 	}
-	else if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+	else if (key == GLFW_KEY_2 && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
 		textureMixRate -= (textureChangeSpeed*deltaTime*2);
 		if (textureMixRate < 0) {
 			textureMixRate = 0;
 		}
 	}
+
 	else if (key==GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		transformMat = rotate(transformMat, rotateSpeed*deltaTime * 2, glm::vec3(0, 0, 1));
+		transformMat = rotate(transformMat, rotateSpeed*deltaTime * 2, glm::vec3(0, 1, 0));
 	}
 	else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		transformMat = rotate(transformMat, -rotateSpeed*deltaTime * 2, glm::vec3(0, 0, 1));
+		transformMat = rotate(transformMat, -rotateSpeed*deltaTime * 2, glm::vec3(0, 1, 0));
+	}
+	else if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		transformMat = rotate(transformMat, rotateSpeed*deltaTime * 2, glm::vec3(1, 0, 0));
+	}
+	else if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		transformMat = rotate(transformMat, -rotateSpeed*deltaTime * 2, glm::vec3(1, 0, 0));
 	}
 	else if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS) {
 		stillGoingOn = false;

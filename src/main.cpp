@@ -25,7 +25,8 @@ float currentTime;
 float deltaTime;
 float AngularSpeed = 3.141592;
 float actualAngle = 0;
-
+//matriz de proyeccion
+glm::mat4 projMat;
 
 //variables para el mix de texturas
 float textureChangeSpeed = 1;
@@ -191,8 +192,8 @@ int main() {
 
 #pragma region Matrices
 	scaleVector=glm::vec3(1,1,0);
-	translateVector = glm::vec3(0,0,0);
-	rotationX = glm::radians(50.f);
+	translateVector = glm::vec3(0,-0.5,0);
+	rotationX = glm::radians(60.f);
 
 	transformMat = glm::scale(transformMat, scaleVector);
 	transformMat = glm::translate(transformMat, translateVector);
@@ -208,7 +209,9 @@ int main() {
 #pragma endregion
 
 #pragma region Camara
-	Camara camara(60, glm::vec3(0,0,-3.0), screenWithd / screenHeight);
+	Camara camara(60, glm::vec3(0,0,-3.0), glm::vec3(0,0,0));
+
+	projMat = glm::perspective(glm::radians((float)camara.fov), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
 
 #pragma endregion
 	//bucle de dibujado
@@ -238,8 +241,8 @@ int main() {
 		glUniform1f(glGetUniformLocation(shader.Program, "rate"),textureMixRate );
 		
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program,"transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat));
-		//glUniformMatrix4fv(glGetUniformLocation(shader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
-		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(camara.projMat));
+		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
+		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
 
 		//establecer el shader
 		shader.USE();

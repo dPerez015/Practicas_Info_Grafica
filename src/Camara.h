@@ -5,11 +5,14 @@
 
 class Camara {
 public:
-	Camara(int, glm::vec3, float);
+	Camara(int, glm::vec3,glm::vec3);
 	~Camara();
 	glm::mat4 viewMat;
-	glm::mat4 projMat;
+	glm::mat4 viewMatAuto;
 	glm::vec3 position;
+	glm::vec3 vecDirection;
+	glm::vec3 vecRight;
+	glm::vec3 vecUp;
 	int fov;
 };
 

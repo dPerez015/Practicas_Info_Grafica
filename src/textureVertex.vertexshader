@@ -5,13 +5,13 @@
 layout(location = 0) in vec3 vertexPosition_modelspace;
 layout(location = 2) in vec2 texCoord;
 out vec2 UV;
+
 uniform mat4 transformMat;
-//uniform mat4 viewMat;
+uniform mat4 viewMat;
 uniform mat4 projMat;
 
 void main(){	
-	gl_Position=projMat*transformMat*vec4(vertexPosition_modelspace,1);
+	gl_Position=projMat*viewMat*transformMat*vec4(vertexPosition_modelspace,1.f);
 	UV=texCoord;
-	gl_Position.w=1.0;
 }
 

@@ -107,6 +107,7 @@ glm::vec3 CubesPositionBuffer[] = {
 
 //matrices
 glm::mat4 transformMat;
+glm::mat4 transformMatCubes;
 //glm::mat4 translationMat;
 //glm::mat4 rotationMat;
 //glm::mat4 scaleMat;
@@ -253,9 +254,6 @@ int main() {
 	translateVector = glm::vec3(0,0,0);
 	rotationX = glm::radians(0.f);
 
-	transformMat = glm::scale(transformMat, scaleVector);
-	transformMat = glm::translate(transformMat, translateVector);
-	transformMat = glm::rotate(transformMat, rotationX, glm::vec3(1,0,0));
 	
 	//pasamos la velocidad de rotacion a radianes
 	rotateSpeed *= glm::pi<float>()/180;
@@ -267,7 +265,7 @@ int main() {
 #pragma endregion
 
 #pragma region Camara
-	Camara camara(60, glm::vec3(0,0,-3.0), glm::vec3(0,0,0));
+	Camara camara(60, glm::vec3(0,0,-20.0), glm::vec3(0,0,0));
 
 	projMat = glm::perspective(glm::radians((float)camara.fov), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
 
@@ -280,7 +278,10 @@ int main() {
 		
 		deltaTime = currentTime - lastFrameTime;
 		lastFrameTime = currentTime;
-		
+		//angulo de rotacion automatica
+		actualAngle += rotateSpeed*deltaTime;
+		if (actualAngle > glm::two_pi<float>())actualAngle = 0;
+
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 
@@ -307,13 +308,20 @@ int main() {
 
 		//pitar el VAO
 		glBindVertexArray(vao);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
 		//pintar triangulos
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glDrawArrays(GL_TRIANGLES,0,36);
-		
+		//pintar los 10 cubos
+		for (int i = 1; i < 10;i++) {
+			transformMatCubes = glm::translate(glm::mat4(), CubesPositionBuffer[i]);
+			transformMatCubes = glm::rotate(transformMatCubes, actualAngle, glm::vec3(0,0,1));
+			glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMatCubes));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+
 		glBindVertexArray(0);
 		// Swap the screen buffers
 		glfwSwapBuffers(window);

@@ -5,6 +5,7 @@
 #include <GLFW\glfw3.h>
 #include <iostream>
 #include "Shader.h"
+#include "Camara.h"
 
 #include <SOIL.h>
 //glm
@@ -54,6 +55,9 @@ glm::mat4 transformMat;
 
 glm::vec3 translateVector;
 glm::vec3 scaleVector;
+float rotationX;
+float rotationY;
+
 float rotateSpeed=90;
 
 void flipTexture(GLfloat* arr, int offset,int stride, int count) {
@@ -99,6 +103,8 @@ int main() {
 
 	int screenWithd, screenHeight;
 	glfwGetFramebufferSize(window, &screenWithd, &screenHeight);
+	
+
 	//fondo
 	Color backgroundColor;
 	backgroundColor.R = 1;
@@ -108,6 +114,8 @@ int main() {
 	//cargamos los shader
 	//Shader shader("./src/SimpleVertexShader.vertexshader", "./src/SimpleFragmentShader.fragmentshader");
 	Shader shader("./src/textureVertex.vertexshader", "./src/textureFragment.fragmentshader");
+
+
 
 #pragma region Buffers
 	//girar las texturas
@@ -182,12 +190,14 @@ int main() {
 #pragma endregion
 
 #pragma region Matrices
-
-	scaleVector=glm::vec3(0.5,-0.5,0);
-	translateVector = glm::vec3(0.5,0.5,0);
+	scaleVector=glm::vec3(1,1,0);
+	translateVector = glm::vec3(0,0,0);
+	rotationX = glm::radians(50.f);
 
 	transformMat = glm::scale(transformMat, scaleVector);
 	transformMat = glm::translate(transformMat, translateVector);
+	transformMat = glm::rotate(transformMat, rotationX, glm::vec3(1,0,0));
+	
 	//pasamos la velocidad de rotacion a radianes
 	rotateSpeed *= glm::pi<float>()/180;
 
@@ -197,6 +207,10 @@ int main() {
 
 #pragma endregion
 
+#pragma region Camara
+	Camara camara(60, glm::vec3(0,0,-3.0), screenWithd / screenHeight);
+
+#pragma endregion
 	//bucle de dibujado
 	lastFrameTime = glfwGetTime();
 
@@ -224,6 +238,9 @@ int main() {
 		glUniform1f(glGetUniformLocation(shader.Program, "rate"),textureMixRate );
 		
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program,"transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat));
+		//glUniformMatrix4fv(glGetUniformLocation(shader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
+		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(camara.projMat));
+
 		//establecer el shader
 		shader.USE();
 

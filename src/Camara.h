@@ -1,4 +1,7 @@
 #pragma once
+#define GLEW_STATIC
+#include <GL\glew.h>
+#include <GLFW\glfw3.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
@@ -7,12 +10,32 @@ class Camara {
 public:
 	Camara(int, glm::vec3,glm::vec3);
 	~Camara();
+	void DoMovement(int);
+	void MouseMove(GLFWwindow* window, double xpos, double ypos);
+	void MouseScroll(GLFWwindow* window, double xScroll, double yScroll);
+	glm::mat4 LookAt();
+	void CalculateLookAt();
+	GLfloat GetFOV();
+
+	//posicion
+	glm::vec3 cameraPos;
+	float cameraSpeed;
+	//vectores directores
+	glm::vec3 cameraTarget;
+	glm::vec3 cameraFront;
+	glm::vec3 cameraRight;
+	glm::vec3 cameraUp;
+	
+	//delta time
+	float lastFrameTime;
+	float currentTime;
+	float deltaTime;
+
+	//matrices
 	glm::mat4 viewMat;
 	glm::mat4 viewMatAuto;
-	glm::vec3 position;
-	glm::vec3 vecDirection;
-	glm::vec3 vecRight;
-	glm::vec3 vecUp;
+	glm::mat4 vecMat;
+	glm::mat4 transMat;
 	int fov;
 };
 

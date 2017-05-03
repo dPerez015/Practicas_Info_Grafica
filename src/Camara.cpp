@@ -1,38 +1,60 @@
-
 #include "Camara.h"
-#include <GL\glew.h>
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
 
-Camara::Camara(int f, glm::vec3 pos,glm::vec3 dir) {
+
+Camara::Camara(int f, glm::vec3 pos,glm::vec3 target) {
 	fov = f;
-	position = pos;
+	cameraPos = pos;
+	cameraSpeed =5.0f;
+	cameraTarget = target;
 
 	
-	vecDirection = position-dir;
-	vecDirection = glm::normalize(vecDirection);
-
-	vecRight = glm::cross(glm::vec3(0,1,0), vecDirection);
-	//vecRight = glm::normalize(vecRight);
-
-	vecUp = glm::cross( vecDirection, vecRight);
-
 	//viewMatrix manual
-	glm::mat4 vecMat;
-	vecMat[0] = glm::vec4(vecRight.x, vecRight.y, vecRight.z,0);
-	vecMat[1] = glm::vec4(vecUp.x, vecUp.y, vecUp.z, 0);
-	vecMat[2] = glm::vec4(vecDirection.x, vecDirection.y, vecDirection.z, 0);
-	vecMat[3] = glm::vec4(0,0,0,1);
+	CalculateLookAt();
 	
-	glm::mat4 transMat;
-	transMat[0] = glm::vec4(1, 0, 0, -position.x);
-	transMat[1] = glm::vec4(0, 1, 0, -position.y);
-	transMat[2] = glm::vec4(0, 0, 1, -position.z);
-	transMat[3] =glm::vec4(0,0,0,1);
+	viewMatAuto = glm::lookAt(cameraPos, cameraPos+cameraFront,cameraUp);
+}
 
-	viewMat = glm::transpose(vecMat)*glm::transpose(transMat);
-	viewMatAuto = glm::lookAt(position, position+vecDirection,vecUp);
+glm::mat4 Camara::LookAt() { return viewMat; }
+
+void Camara::CalculateLookAt() {
+	cameraFront = cameraPos - cameraTarget;
+	cameraFront = glm::normalize(cameraFront);
+
+	cameraRight = glm::cross(glm::vec3(0, 1, 0), cameraFront);
+
+
+	cameraUp = glm::cross(cameraFront, cameraRight);
+
+	vecMat[0] = glm::vec4(cameraRight.x, cameraUp.x, cameraFront.x, 0);
+	vecMat[1] = glm::vec4(cameraRight.y, cameraUp.y, cameraFront.y, 0);
+	vecMat[2] = glm::vec4(cameraRight.z, cameraUp.z, cameraFront.z, 0);
+	vecMat[3] = glm::vec4(0, 0, 0, 1);
+
+	transMat[0] = glm::vec4(1, 0, 0, 0);
+	transMat[1] = glm::vec4(0, 1, 0, 0);
+	transMat[2] = glm::vec4(0, 0, 1, 0);
+	transMat[3] = glm::vec4(-cameraPos.x, -cameraPos.y, -cameraPos.z, 1);
+	
+	viewMat = vecMat*transMat;
+}
+
+void Camara::DoMovement(int key) {
+	if (key == GLFW_KEY_W) {
+		cameraPos = cameraPos + (-cameraFront*cameraSpeed*deltaTime);
+		CalculateLookAt();
+	}
+	else if (key == GLFW_KEY_A) {
+		cameraPos = cameraPos - (cameraRight*cameraSpeed*deltaTime);
+		CalculateLookAt();
+	}
+	else if (key == GLFW_KEY_D) {
+		cameraPos = cameraPos + (cameraRight*cameraSpeed*deltaTime);
+		CalculateLookAt();
+	}
+	else if (key == GLFW_KEY_S) {
+		cameraPos = cameraPos - (-cameraFront*cameraSpeed*deltaTime);
+		CalculateLookAt();
+	}
 }
 
 

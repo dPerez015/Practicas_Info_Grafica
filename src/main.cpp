@@ -16,13 +16,9 @@
 using namespace std;
 const GLint WIDTH = 800, HEIGHT = 600;
 bool WIDEFRAME = false;
-bool useLines = false;
 bool stillGoingOn = true;
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
-float lastFrameTime;
-float currentTime;
-float deltaTime;
 float AngularSpeed = 3.141592;
 float actualAngle = 0;
 //matriz de proyeccion
@@ -119,6 +115,8 @@ float rotationY;
 
 float rotateSpeed=90;
 
+Camara camara(60, glm::vec3(0, 0, 3.0), glm::vec3(0, 0, 0));
+
 void flipTexture(GLfloat* arr, int offset,int stride, int count) {
 	for (int i = 0; i < count; i++) {
 		arr[i*stride + offset] = 1 - arr[i*stride + offset];
@@ -175,7 +173,7 @@ int main() {
 	Shader shader("./src/textureVertex.vertexshader", "./src/textureFragment.fragmentshader");
 
 	glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS);
+	
 
 #pragma region Buffers
 	//girar las texturas
@@ -264,22 +262,23 @@ int main() {
 
 #pragma endregion
 
-#pragma region Camara
-	Camara camara(60, glm::vec3(0,0,-20.0), glm::vec3(0,0,0));
+#pragma region Matriz Proyeccion
 
 	projMat = glm::perspective(glm::radians((float)camara.fov), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
 
 #pragma endregion
 	//bucle de dibujado
-	lastFrameTime = glfwGetTime();
+	camara.lastFrameTime = glfwGetTime();
 
 	while (!glfwWindowShouldClose(window) && stillGoingOn) {
-		currentTime = glfwGetTime();
+		camara.currentTime = glfwGetTime();
 		
-		deltaTime = currentTime - lastFrameTime;
-		lastFrameTime = currentTime;
+		camara.deltaTime = camara.currentTime - camara.lastFrameTime;
+		camara.lastFrameTime = camara.currentTime;
+
+	
 		//angulo de rotacion automatica
-		actualAngle += rotateSpeed*deltaTime;
+		actualAngle += rotateSpeed*camara.deltaTime;
 		if (actualAngle > glm::two_pi<float>())actualAngle = 0;
 
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
@@ -337,35 +336,38 @@ int main() {
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
-	//TODO, comprobar que la tecla pulsada es escape para cerrar la aplicación y la tecla w para cambiar a modo widwframe
-	if (key == GLFW_KEY_W&&action == GLFW_PRESS) {
-		useLines = !useLines;
-	}
-	else if (key==GLFW_KEY_1 && (action==GLFW_PRESS || action==GLFW_REPEAT)) {
-		textureMixRate += (textureChangeSpeed*deltaTime);
+	
+	//texturas
+	if (key==GLFW_KEY_1 && (action==GLFW_PRESS || action==GLFW_REPEAT)) {
+		textureMixRate += (textureChangeSpeed*camara.deltaTime);
 		if (textureMixRate > 1) {
 			textureMixRate = 1;
 		}
 	}
 	else if (key == GLFW_KEY_2 && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		textureMixRate -= (textureChangeSpeed*deltaTime*2);
+		textureMixRate -= (textureChangeSpeed*camara.deltaTime*2);
 		if (textureMixRate < 0) {
 			textureMixRate = 0;
 		}
 	}
-
+	//rotaciones
 	else if (key==GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		transformMat = rotate(transformMat, rotateSpeed*deltaTime * 2, glm::vec3(0, 1, 0));
+		transformMat = rotate(transformMat, rotateSpeed*camara.deltaTime * 2, glm::vec3(0, 1, 0));
 	}
 	else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		transformMat = rotate(transformMat, -rotateSpeed*deltaTime * 2, glm::vec3(0, 1, 0));
+		transformMat = rotate(transformMat, -rotateSpeed*camara.deltaTime * 2, glm::vec3(0, 1, 0));
 	}
 	else if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		transformMat = rotate(transformMat, rotateSpeed*deltaTime * 2, glm::vec3(1, 0, 0));
+		transformMat = rotate(transformMat, rotateSpeed*camara.deltaTime * 2, glm::vec3(1, 0, 0));
 	}
 	else if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		transformMat = rotate(transformMat, -rotateSpeed*deltaTime * 2, glm::vec3(1, 0, 0));
+		transformMat = rotate(transformMat, -rotateSpeed*camara.deltaTime * 2, glm::vec3(1, 0, 0));
 	}
+	else if ((key==GLFW_KEY_W || key == GLFW_KEY_A || key == GLFW_KEY_S || key == GLFW_KEY_D) && ( action == GLFW_REPEAT)){
+		camara.DoMovement(key);
+	}
+
+	//salir
 	else if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS) {
 		stillGoingOn = false;
 	}

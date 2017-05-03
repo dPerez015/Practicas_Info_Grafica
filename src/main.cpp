@@ -123,6 +123,10 @@ void flipTexture(GLfloat* arr, int offset,int stride, int count) {
 	}
 }
 
+//void mouseMov() {
+//	camara.MouseMove();
+//}
+
 int main() {
 	//initGLFW
 	GLFWwindow* window;
@@ -171,9 +175,14 @@ int main() {
 	//cargamos los shader
 	//Shader shader("./src/SimpleVertexShader.vertexshader", "./src/SimpleFragmentShader.fragmentshader");
 	Shader shader("./src/textureVertex.vertexshader", "./src/textureFragment.fragmentshader");
-
+	
+	//activacion del test de profundidad
 	glEnable(GL_DEPTH_TEST);
 	
+	//activacion del raton
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	//glfwSetCursorPosCallback(window, Camara.mouseMov);
 
 #pragma region Buffers
 	//girar las texturas
@@ -264,7 +273,7 @@ int main() {
 
 #pragma region Matriz Proyeccion
 
-	projMat = glm::perspective(glm::radians((float)camara.fov), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
+	projMat = glm::perspective(glm::radians((float)camara.FOV), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
 
 #pragma endregion
 

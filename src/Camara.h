@@ -22,23 +22,27 @@ public:
 	float cameraSpeed;
 	glm::vec3 nextMove;
 
+	//rotaciones
+	GLfloat PITCH, YAW;
+	GLfloat LastMx, LastMy;
+	GLfloat Sensitivity;
+	GLboolean firstMouse;
+
 	//vectores directores
-	glm::vec3 cameraTarget;
 	glm::vec3 cameraFront;
 	glm::vec3 cameraRight;
 	glm::vec3 cameraUp;
 	
 	//delta time
-	float lastFrameTime;
-	float currentTime;
-	float deltaTime;
+	GLfloat lastFrameTime;
+	GLfloat currentTime;
+	GLfloat deltaTime;
 
 	//matrices
 	glm::mat4 viewMat;
-	glm::mat4 viewMatAuto;
-	glm::mat4 vecMat;
-	glm::mat4 transMat;
-	int fov;
+	glm::mat4 vecMat;//matriz con los vectores de la view mat
+	glm::mat4 transMat;//matriz con la posicion de la camara
+	int FOV;
 
 	//key states
 	bool states[4];

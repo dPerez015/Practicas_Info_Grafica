@@ -2,18 +2,21 @@
 
 
 Camara::Camara(int f, glm::vec3 pos,glm::vec3 target) {
-	fov = f;
+	FOV = f;
 	cameraPos = pos;
 	cameraSpeed =5.0f;
-	cameraTarget = target;
 
-	cameraFront = cameraPos - cameraTarget;
+	cameraFront = cameraPos - target;
 	cameraFront = glm::normalize(cameraFront);
 
 	//viewMatrix manual
 	CalculateLookAt();
 	
-	viewMatAuto = glm::lookAt(cameraPos, cameraPos+cameraFront,cameraUp);
+	Sensitivity = 0.5;
+	
+	PITCH = glm::asin(cameraFront.y);
+	YAW = glm::acos(cameraFront.x)/glm::sin(PITCH);
+
 }
 
 glm::mat4 Camara::LookAt() { return viewMat; }
@@ -38,6 +41,7 @@ void Camara::CalculateLookAt() {
 }
 
 void Camara::DoMovement(GLFWwindow* window) {
+	//translacion
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)states[0] = true;
 	else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE)states[0] = false;
 	
@@ -65,9 +69,23 @@ void Camara::DoMovement(GLFWwindow* window) {
 	}
 
 	cameraPos += nextMove*cameraSpeed*deltaTime;
+	
+	//rotacion
+	cameraFront.x = glm::cos(YAW*glm::sin(PITCH));
+	cameraFront.y = glm::sin(PITCH);
+	cameraFront.z = glm::sin(YAW*sin(PITCH));
+
 }
 
+void Camara::MouseMove(GLFWwindow* window, double xpos, double ypos) {
 
+}
+
+void Camara::MouseScroll(GLFWwindow* window, double xScroll, double yScroll) {
+
+}
+
+GLfloat Camara::GetFOV() { return FOV; }
 
 Camara::~Camara()
 {

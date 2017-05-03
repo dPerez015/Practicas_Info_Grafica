@@ -20,6 +20,7 @@ public:
 	//posicion
 	glm::vec3 cameraPos;
 	float cameraSpeed;
+	glm::vec3 nextMove;
 
 	//vectores directores
 	glm::vec3 cameraTarget;

@@ -50,23 +50,23 @@ void Camara::DoMovement(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)states[3] = true;
 	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE)states[3] = false;
 
+	nextMove = glm::vec3(0);
 	if (states[0]) {
-		cameraPos = cameraPos + (-cameraFront*cameraSpeed*deltaTime);
-		CalculateLookAt();
+		nextMove += (-cameraFront);
 	}
-	else if (states[1]) {
-		cameraPos = cameraPos - (cameraRight*cameraSpeed*deltaTime);
-		CalculateLookAt();
+	if (states[1]) {
+		nextMove -= cameraRight;
 	}
-	else if (states[2] ) {
-		cameraPos = cameraPos + (cameraRight*cameraSpeed*deltaTime);
-		CalculateLookAt();
+	if (states[2] ) {
+		nextMove += cameraRight;
 	}
-	else if (states[3] ) {
-		cameraPos = cameraPos - (-cameraFront*cameraSpeed*deltaTime);
-		CalculateLookAt();
+	if (states[3] ) {
+		nextMove -= (-cameraFront);
 	}
+
+	cameraPos += nextMove*cameraSpeed*deltaTime;
 }
+
 
 
 Camara::~Camara()

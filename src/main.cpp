@@ -267,6 +267,7 @@ int main() {
 	projMat = glm::perspective(glm::radians((float)camara.fov), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
 
 #pragma endregion
+
 	//bucle de dibujado
 	camara.lastFrameTime = glfwGetTime();
 
@@ -301,6 +302,7 @@ int main() {
 
 		//camara
 		camara.DoMovement(window);
+		camara.CalculateLookAt();
 
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program,"transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat));
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));

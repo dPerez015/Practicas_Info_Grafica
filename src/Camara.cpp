@@ -7,7 +7,9 @@ Camara::Camara(int f, glm::vec3 pos,glm::vec3 target) {
 	cameraSpeed =5.0f;
 	cameraTarget = target;
 
-	
+	cameraFront = cameraPos - cameraTarget;
+	cameraFront = glm::normalize(cameraFront);
+
 	//viewMatrix manual
 	CalculateLookAt();
 	
@@ -17,11 +19,8 @@ Camara::Camara(int f, glm::vec3 pos,glm::vec3 target) {
 glm::mat4 Camara::LookAt() { return viewMat; }
 
 void Camara::CalculateLookAt() {
-	cameraFront = cameraPos - cameraTarget;
-	cameraFront = glm::normalize(cameraFront);
-
+	
 	cameraRight = glm::cross(glm::vec3(0, 1, 0), cameraFront);
-
 
 	cameraUp = glm::cross(cameraFront, cameraRight);
 
@@ -38,20 +37,32 @@ void Camara::CalculateLookAt() {
 	viewMat = vecMat*transMat;
 }
 
-void Camara::DoMovement(int key) {
-	if (key == GLFW_KEY_W) {
+void Camara::DoMovement(GLFWwindow* window) {
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)states[0] = true;
+	else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE)states[0] = false;
+	
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)states[1] = true;
+	else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_RELEASE)states[1] = false;
+	
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)states[2] = true;
+	else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE)states[2] = false;
+	
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)states[3] = true;
+	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE)states[3] = false;
+
+	if (states[0]) {
 		cameraPos = cameraPos + (-cameraFront*cameraSpeed*deltaTime);
 		CalculateLookAt();
 	}
-	else if (key == GLFW_KEY_A) {
+	else if (states[1]) {
 		cameraPos = cameraPos - (cameraRight*cameraSpeed*deltaTime);
 		CalculateLookAt();
 	}
-	else if (key == GLFW_KEY_D) {
+	else if (states[2] ) {
 		cameraPos = cameraPos + (cameraRight*cameraSpeed*deltaTime);
 		CalculateLookAt();
 	}
-	else if (key == GLFW_KEY_S) {
+	else if (states[3] ) {
 		cameraPos = cameraPos - (-cameraFront*cameraSpeed*deltaTime);
 		CalculateLookAt();
 	}

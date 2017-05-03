@@ -298,6 +298,10 @@ int main() {
 		
 		glUniform1f(glGetUniformLocation(shader.Program, "rate"),textureMixRate );
 		
+
+		//camara
+		camara.DoMovement(window);
+
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program,"transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat));
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
@@ -362,9 +366,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	else if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
 		transformMat = rotate(transformMat, -rotateSpeed*camara.deltaTime * 2, glm::vec3(1, 0, 0));
-	}
-	else if ((key==GLFW_KEY_W || key == GLFW_KEY_A || key == GLFW_KEY_S || key == GLFW_KEY_D) && ( action == GLFW_REPEAT)){
-		camara.DoMovement(key);
 	}
 
 	//salir

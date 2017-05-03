@@ -10,7 +10,7 @@ class Camara {
 public:
 	Camara(int, glm::vec3,glm::vec3);
 	~Camara();
-	void DoMovement(int);
+	void DoMovement(GLFWwindow*);
 	void MouseMove(GLFWwindow* window, double xpos, double ypos);
 	void MouseScroll(GLFWwindow* window, double xScroll, double yScroll);
 	glm::mat4 LookAt();
@@ -20,6 +20,7 @@ public:
 	//posicion
 	glm::vec3 cameraPos;
 	float cameraSpeed;
+
 	//vectores directores
 	glm::vec3 cameraTarget;
 	glm::vec3 cameraFront;
@@ -37,5 +38,8 @@ public:
 	glm::mat4 vecMat;
 	glm::mat4 transMat;
 	int fov;
+
+	//key states
+	bool states[4];
 };
 

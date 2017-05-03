@@ -123,9 +123,9 @@ void flipTexture(GLfloat* arr, int offset,int stride, int count) {
 	}
 }
 
-//void mouseMov() {
-//	camara.MouseMove();
-//}
+void MouseMov(GLFWwindow* window, double xpos, double ypos) {
+	camara.MouseMove(window, xpos, ypos);
+}
 
 int main() {
 	//initGLFW
@@ -182,7 +182,7 @@ int main() {
 	//activacion del raton
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	//glfwSetCursorPosCallback(window, Camara.mouseMov);
+	glfwSetCursorPosCallback(window, MouseMov);
 
 #pragma region Buffers
 	//girar las texturas

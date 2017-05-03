@@ -12,7 +12,7 @@ Camara::Camara(int f, glm::vec3 pos,glm::vec3 target) {
 	//viewMatrix manual
 	CalculateLookAt();
 	
-	Sensitivity = 0.5;
+	Sensitivity = 0.04;
 	
 	PITCH = glm::asin(cameraFront.y);
 	YAW = glm::acos(cameraFront.x)/glm::sin(PITCH);
@@ -75,9 +75,18 @@ void Camara::DoMovement(GLFWwindow* window) {
 	cameraFront.y = glm::sin(PITCH);
 	cameraFront.z = glm::sin(YAW*sin(PITCH));
 
+	CalculateLookAt();
 }
 
 void Camara::MouseMove(GLFWwindow* window, double xpos, double ypos) {
+	YAW += xpos - LastMx;
+	YAW = glm::mod(YAW, 360.f);
+
+	PITCH += ypos - LastMy;
+	PITCH = glm::clamp(PITCH, -89.f, 89.f);
+	
+	LastMx = xpos;
+	LastMy = ypos;
 
 }
 

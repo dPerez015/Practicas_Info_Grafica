@@ -1,5 +1,5 @@
 #include "Object.h"
-
+/*
 Object::Object(vec3 scale, vec3 rotation, vec3 position, FigureType typef) {
 
 	GLfloat VertexBufferObject[] = {
@@ -77,3 +77,4 @@ vec3 Object::GetPosition() {
 void Object::Delete() {
 
 }
+*/

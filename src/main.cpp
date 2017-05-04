@@ -126,7 +126,9 @@ void flipTexture(GLfloat* arr, int offset,int stride, int count) {
 void MouseMov(GLFWwindow* window, double xpos, double ypos) {
 	camara.MouseMove(window, xpos, ypos);
 }
-
+void MouseScroll(GLFWwindow* window, double xpos, double ypos) {
+	camara.MouseScroll(window, xpos, ypos);
+}
 int main() {
 	//initGLFW
 	GLFWwindow* window;
@@ -183,7 +185,7 @@ int main() {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glfwSetCursorPosCallback(window, MouseMov);
-
+	glfwSetScrollCallback(window, MouseScroll);
 #pragma region Buffers
 	//girar las texturas
 	flipTexture(&VertexBufferCube[0], 4, 5, 36);
@@ -271,11 +273,7 @@ int main() {
 
 #pragma endregion
 
-#pragma region Matriz Proyeccion
 
-	projMat = glm::perspective(glm::radians((float)camara.FOV), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
-
-#pragma endregion
 
 	//bucle de dibujado
 	camara.lastFrameTime = glfwGetTime();
@@ -312,6 +310,8 @@ int main() {
 		//camara
 		camara.DoMovement(window);
 		camara.CalculateLookAt();
+
+		projMat = glm::perspective(glm::radians((float)camara.FOV), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
 
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program,"transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat));
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));

@@ -5,7 +5,7 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
-
+#include <iostream>
 class Camara {
 public:
 	Camara(int, glm::vec3,glm::vec3);
@@ -40,6 +40,7 @@ public:
 
 	//matrices
 	glm::mat4 viewMat;
+	glm::mat4 autoviewMat;
 	glm::mat4 vecMat;//matriz con los vectores de la view mat
 	glm::mat4 transMat;//matriz con la posicion de la camara
 	int FOV;

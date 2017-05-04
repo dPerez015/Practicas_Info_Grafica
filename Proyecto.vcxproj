@@ -21,10 +21,12 @@
   <ItemGroup>
     <ClCompile Include="src\Camara.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camara.h" />
+    <ClInclude Include="src\Object.h" />
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

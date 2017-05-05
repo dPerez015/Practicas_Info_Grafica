@@ -115,7 +115,9 @@ glm::vec3 translateVector;
 glm::vec3 scaleVector;
 float rotationX;
 float rotationY;
-bool renderModel1, renderModel2, renderModel3;
+bool renderModel1=false;
+bool renderModel2 = true;
+bool renderModel3 = false;
 
 Camara camara(60, glm::vec3(0, 0, 3.0), glm::vec3(0, 0, 0));
 
@@ -198,16 +200,16 @@ int main() {
 #pragma endregion
 
 #pragma region Matrices
-	scaleVector=glm::vec3(0.2,0.2,0.2);
+	scaleVector=glm::vec3(0.01,0.01,0.01);
 	translateVector = glm::vec3(0,0,0);
 	rotationX = glm::radians(0.f);
 	transformMat1 = glm::scale(transformMat1, scaleVector);
 
-	scaleVector = glm::vec3(0.02,0.02,0.02);
-	transformMat2 = glm::scale(glm::mat4(0),scaleVector);
+	scaleVector = glm::vec3(0.1,0.1,0.1);
+	transformMat2 = glm::scale(transformMat2,scaleVector);
 
-	scaleVector = glm::vec3(0.05,0.05,0.05);
-	transformMat3 = glm::scale(glm::mat4(0), scaleVector);
+	scaleVector = glm::vec3(0.02,0.02,0.02);
+	transformMat3 = glm::scale(transformMat3, scaleVector);
 
 
 #pragma endregion
@@ -255,15 +257,17 @@ int main() {
 			glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat1));
 			araña.Draw(shader, GL_FRONT_AND_BACK);
 		}
-		if (renderModel2) {
+		else if (renderModel2) {
 			glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat2));
 			nanosuit.Draw(shader, GL_FRONT_AND_BACK);
 		}
-		if (renderModel3) {
+		else if (renderModel3) {
 			glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat3));
 			casa.Draw(shader, GL_FRONT_AND_BACK);
 		}
-		
+		/*glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat1));
+		nanosuit.Draw(shader, GL_FRONT_AND_BACK);*/
+
 		glBindVertexArray(0);
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
@@ -279,7 +283,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	
 	//salir
 	if (key ==GLFW_KEY_1 && action==GLFW_PRESS) {
+		renderModel1 = true;
+		renderModel2 = false;
+		renderModel3 = false;
+	}
+	else if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
+		renderModel1 = false;
+		renderModel2 = true;
+		renderModel3 = false;
 	
+	}
+	else if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
+		renderModel1 = false;
+		renderModel2 = false;
+		renderModel3 = true;
+
 	}
 	else if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS) {
 		stillGoingOn = false;

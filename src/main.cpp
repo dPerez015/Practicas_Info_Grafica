@@ -103,8 +103,10 @@ glm::vec3 CubesPositionBuffer[] = {
 
 
 //matrices
-glm::mat4 transformMat;
-glm::mat4 transformMatCubes;
+glm::mat4 transformMat1;
+glm::mat4 transformMat2;
+glm::mat4 transformMat3;
+
 //glm::mat4 translationMat;
 //glm::mat4 rotationMat;
 //glm::mat4 scaleMat;
@@ -113,8 +115,7 @@ glm::vec3 translateVector;
 glm::vec3 scaleVector;
 float rotationX;
 float rotationY;
-
-float rotateSpeed=90;
+bool renderModel1, renderModel2, renderModel3;
 
 Camara camara(60, glm::vec3(0, 0, 3.0), glm::vec3(0, 0, 0));
 
@@ -200,18 +201,22 @@ int main() {
 	scaleVector=glm::vec3(0.2,0.2,0.2);
 	translateVector = glm::vec3(0,0,0);
 	rotationX = glm::radians(0.f);
-	transformMat = glm::scale(transformMat, scaleVector);
-	
-	//pasamos la velocidad de rotacion a radianes
-	rotateSpeed *= glm::pi<float>()/180;
+	transformMat1 = glm::scale(transformMat1, scaleVector);
+
+	scaleVector = glm::vec3(0.02,0.02,0.02);
+	transformMat2 = glm::scale(glm::mat4(0),scaleVector);
+
+	scaleVector = glm::vec3(0.05,0.05,0.05);
+	transformMat3 = glm::scale(glm::mat4(0), scaleVector);
+
 
 #pragma endregion
 
 
 #pragma region Modelos
-	Model nanosuit("E:/enti/segundo/informatica grafica/practica1/Practicas_Info_Grafica/src/nanosuit/nanosuit.obj");
-	Model casa("E:/enti/segundo/informatica grafica/practica1/Practicas_Info_Grafica/src/casa/casa.obj");
-	Model araña("E:/enti/segundo/informatica grafica/practica1/Practicas_Info_Grafica/src/spider/spider.obj");
+	Model nanosuit("./src/nanosuit/nanosuit.obj");
+	Model casa("./src/casa/casa.obj");
+	Model araña("./src/spider/spider.obj");
 #pragma endregion
 
 
@@ -239,16 +244,26 @@ int main() {
 
 		projMat = glm::perspective(glm::radians((float)camara.FOV), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
 
-		glUniformMatrix4fv(glGetUniformLocation(shader.Program,"transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat));
+		
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
 
 		
 
 		//pintar
-		//nanosuit.Draw(shader, GL_FRONT_AND_BACK);
-		//araña.Draw(shader, GL_FRONT_AND_BACK);
-		casa.Draw(shader, GL_FRONT_AND_BACK);
+		if (renderModel1) {
+			glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat1));
+			araña.Draw(shader, GL_FRONT_AND_BACK);
+		}
+		if (renderModel2) {
+			glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat2));
+			nanosuit.Draw(shader, GL_FRONT_AND_BACK);
+		}
+		if (renderModel3) {
+			glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat3));
+			casa.Draw(shader, GL_FRONT_AND_BACK);
+		}
+		
 		glBindVertexArray(0);
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
@@ -263,7 +278,10 @@ int main() {
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
 	
 	//salir
-	if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS) {
+	if (key ==GLFW_KEY_1 && action==GLFW_PRESS) {
+	
+	}
+	else if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS) {
 		stillGoingOn = false;
 	}
 }

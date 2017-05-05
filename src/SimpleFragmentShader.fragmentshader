@@ -1,17 +1,13 @@
 #version 330 core
 
-layout(pixel_center_integer) in vec4 gl_FragCoord;
-//uniform int height;
-uniform int width;
-in vec3 vertexOriginalPos;
-// Ouput data
-out vec3 color;
+in vec2 UV;
 
+
+out vec4 color;
+
+uniform sampler2D texture_diffuse1;
 
 void main(){
-	
-	color.x=0+abs(gl_FragCoord.x/width-(vertexOriginalPos.x+1)/2)*4;
-	color.y=1-abs(gl_FragCoord.x/width-(vertexOriginalPos.x+1)/2)*4;
-	color.z=0;	
-	
+	color=vec4(texture(texture_diffuse1, UV));
+	//color=vec4(UV,0,0);
 }

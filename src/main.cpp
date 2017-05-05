@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Shader.h"
 #include "Camara.h"
+#include "Model.h"
 
 #include <SOIL.h>
 //glm
@@ -167,6 +168,7 @@ int main() {
 	int screenWithd, screenHeight;
 	glfwGetFramebufferSize(window, &screenWithd, &screenHeight);
 	
+	glViewport(0,0,screenWithd, screenHeight);
 
 	//fondo
 	Color backgroundColor;
@@ -176,7 +178,7 @@ int main() {
 
 	//cargamos los shader
 	//Shader shader("./src/SimpleVertexShader.vertexshader", "./src/SimpleFragmentShader.fragmentshader");
-	Shader shader("./src/textureVertex.vertexshader", "./src/textureFragment.fragmentshader");
+	Shader shader("./src/SimpleVertexShader.vertexshader", "./src/SimpleFragmentShader.fragmentshader");
 	
 	//activacion del test de profundidad
 	glEnable(GL_DEPTH_TEST);
@@ -187,92 +189,30 @@ int main() {
 	glfwSetCursorPosCallback(window, MouseMov);
 	glfwSetScrollCallback(window, MouseScroll);
 #pragma region Buffers
-	//girar las texturas
-	flipTexture(&VertexBufferCube[0], 4, 5, 36);
-	// Definir el buffer de vertices
-	GLuint vbo, vao;
-	// Definir el EBO
-	GLuint ebo;
-	// Crear los VBO, VAO y EBO
 
-	//reservar memoria para el VAO, VBO y EBO
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ebo);
-	glGenVertexArrays(1, &vao);
-
-
-	glBindVertexArray(vao);
-	//Establecer el objeto (VAO)
-	//Declarar el VBO y el EBO
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBufferCube), VertexBufferCube, GL_STATIC_DRAW);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(CubesPositionBuffer), CubesPositionBuffer, GL_STATIC_DRAW);
-
-
-	//Establecer las propiedades de los vertices
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
-	
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	//glEnableVertexAttribArray(2);
-
-	//liberar el buffer de vertices
-	glBindVertexArray(0);
 #pragma endregion
 #pragma region Texturas	
 	//texturas
-	GLuint texture[2];
-	glGenTextures(2, texture);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	
-	glBindTexture(GL_TEXTURE_2D, texture[1]);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	
-	//load a la textura
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	int width[2], height[2];
-	unsigned char* image = SOIL_load_image("./src/texture.png", &width[0], &height[0], 0, SOIL_LOAD_RGB);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width[0], height[0], 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-
-	glBindTexture(GL_TEXTURE_2D, texture[1]);
-	image = SOIL_load_image("./src/texture2.jpg", &width[1], &height[1], 0, SOIL_LOAD_RGB);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width[0], height[0], 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-
-	SOIL_free_image_data(image);
-	glBindTexture(GL_TEXTURE_2D, 0);
 
 #pragma endregion
 
 #pragma region Matrices
-	scaleVector=glm::vec3(1,1,1);
+	scaleVector=glm::vec3(0.2,0.2,0.2);
 	translateVector = glm::vec3(0,0,0);
 	rotationX = glm::radians(0.f);
-
+	transformMat = glm::scale(transformMat, scaleVector);
 	
 	//pasamos la velocidad de rotacion a radianes
 	rotateSpeed *= glm::pi<float>()/180;
 
 #pragma endregion
-#pragma region Uniform Variables
-	//Variables uniform
 
+
+#pragma region Modelos
+	Model nanosuit("E:/enti/segundo/informatica grafica/practica1/Practicas_Info_Grafica/src/nanosuit/nanosuit.obj");
+	Model casa("E:/enti/segundo/informatica grafica/practica1/Practicas_Info_Grafica/src/casa/casa.obj");
+	Model araña("E:/enti/segundo/informatica grafica/practica1/Practicas_Info_Grafica/src/spider/spider.obj");
 #pragma endregion
-
 
 
 	//bucle de dibujado
@@ -284,31 +224,17 @@ int main() {
 		camara.deltaTime = camara.currentTime - camara.lastFrameTime;
 		camara.lastFrameTime = camara.currentTime;
 
-	
-		//angulo de rotacion automatica
-		actualAngle += rotateSpeed*camara.deltaTime;
-		if (actualAngle > glm::two_pi<float>())actualAngle = 0;
-
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
-
+		camara.DoMovement(window);
 		//Establecer el color de fondo
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		glClearColor(backgroundColor.R, backgroundColor.G, backgroundColor.B, 1.0);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture[0]);
-		glUniform1i(glGetUniformLocation(shader.Program, "Texture1"), 0); 
-		
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture[1]);
-		glUniform1i(glGetUniformLocation(shader.Program, "Texture2"), 1);
-		
-		glUniform1f(glGetUniformLocation(shader.Program, "rate"),textureMixRate );
-		
+		//establecer el shader
+		shader.USE();
 
 		//camara
-		camara.DoMovement(window);
 		camara.CalculateLookAt();
 
 		projMat = glm::perspective(glm::radians((float)camara.FOV), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
@@ -317,33 +243,17 @@ int main() {
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
 		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
 
-		//establecer el shader
-		shader.USE();
+		
 
-		//pitar el VAO
-		glBindVertexArray(vao);
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-
-		//pintar triangulos
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		glDrawArrays(GL_TRIANGLES,0,36);
-		//pintar los 10 cubos
-		for (int i = 1; i < 10;i++) {
-			transformMatCubes = glm::translate(glm::mat4(), CubesPositionBuffer[i]);
-			transformMatCubes = glm::rotate(transformMatCubes, actualAngle, glm::vec3(0,0,1));
-			glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMatCubes));
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
-
+		//pintar
+		//nanosuit.Draw(shader, GL_FRONT_AND_BACK);
+		//araña.Draw(shader, GL_FRONT_AND_BACK);
+		casa.Draw(shader, GL_FRONT_AND_BACK);
 		glBindVertexArray(0);
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
 	}
-	// liberar la memoria de los VAO, EBO y VBO
-	glDeleteVertexArrays(1, &vao);
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ebo);
+
 
 
 	// Terminate GLFW, clearing any resources allocated by GLFW.
@@ -352,35 +262,8 @@ int main() {
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
 	
-	//texturas
-	if (key==GLFW_KEY_1 && (action==GLFW_PRESS || action==GLFW_REPEAT)) {
-		textureMixRate += (textureChangeSpeed*camara.deltaTime);
-		if (textureMixRate > 1) {
-			textureMixRate = 1;
-		}
-	}
-	else if (key == GLFW_KEY_2 && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		textureMixRate -= (textureChangeSpeed*camara.deltaTime*2);
-		if (textureMixRate < 0) {
-			textureMixRate = 0;
-		}
-	}
-	//rotaciones
-	else if (key==GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		transformMat = rotate(transformMat, rotateSpeed*camara.deltaTime * 2, glm::vec3(0, 1, 0));
-	}
-	else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		transformMat = rotate(transformMat, -rotateSpeed*camara.deltaTime * 2, glm::vec3(0, 1, 0));
-	}
-	else if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		transformMat = rotate(transformMat, rotateSpeed*camara.deltaTime * 2, glm::vec3(1, 0, 0));
-	}
-	else if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		transformMat = rotate(transformMat, -rotateSpeed*camara.deltaTime * 2, glm::vec3(1, 0, 0));
-	}
-
 	//salir
-	else if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS) {
+	if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS) {
 		stillGoingOn = false;
 	}
 }

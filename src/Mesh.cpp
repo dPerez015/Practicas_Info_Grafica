@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-Mesh::Mesh(vector<Vertex> vert, vector<GLuint> ind, vector<Texture> text){
+Mesh::Mesh(vector<Vertex> vert, vector<GLuint> ind, vector<Texture> text) {
 
 	vertices = vert;
 	indices = ind;
@@ -9,7 +9,7 @@ Mesh::Mesh(vector<Vertex> vert, vector<GLuint> ind, vector<Texture> text){
 	setupMesh();
 }
 
-void Mesh::setupMesh(){
+void Mesh::setupMesh() {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -38,9 +38,8 @@ void Mesh::Draw(Shader MeshShader, GLint DrawMode) {
 
 	GLuint diffuseNr = 1;
 	GLuint specularNr = 1;
-	for (GLuint i = 0; i < textures.size(); i++)
-	{
-		glActiveTexture(GL_TEXTURE0 + i); 
+	for (GLuint i = 0; i < textures.size(); i++){
+		glActiveTexture(GL_TEXTURE0 + i);
 		stringstream ss; //comprueba si hay más de una textura por componente
 		string number;
 		string name = textures[i].type;
@@ -49,10 +48,10 @@ void Mesh::Draw(Shader MeshShader, GLint DrawMode) {
 		else if (name == "texture_specular")
 			ss << specularNr++; // concatena en ss el numero de textura especular que toca EJ:texture_specular2
 		number = ss.str();
-		glUniform1f(glGetUniformLocation(MeshShader.Program, ("material." + name + number).c_str()), i);		
+		glUniform1f(glGetUniformLocation(MeshShader.Program, ("material." + name + number).c_str()), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
-	
+
 	// Draw mesh
 	glBindVertexArray(VAO);
 	glPolygonMode(GL_FRONT_AND_BACK, DrawMode);

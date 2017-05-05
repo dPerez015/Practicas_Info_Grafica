@@ -2,27 +2,20 @@
 
 // Input vertex data, different for all executions of this shader.
 layout(location = 0) in vec3 vertexPosition_modelspace;
+layout(location=1)in vec3 normal;
+layout(location=2)in vec2 texCoord;
 
-out vec3 vertexPos;
-out vec3 vertexOriginalPos;
 
-uniform float Sinus;
+out vec2 UV;
+
+uniform mat4 transformMat;
+uniform mat4 viewMat;
+uniform mat4 projMat;
 
 void main(){
+	gl_Position=projMat*viewMat*transformMat*vec4(vertexPosition_modelspace,1.f);
 	
-    gl_Position.xyz = vertexPosition_modelspace;
-	vertexOriginalPos= gl_Position.xyz;
-	if(gl_Position.y==0){
-		if(gl_Position.x<0){
-			gl_Position.x-=Sinus;
-		}
-		else{
-			gl_Position.x+=Sinus;
-		}	
-	}
-    vertexPos=gl_Position.xyz;
-
-	gl_Position.w = 1.0;
+	UV=texCoord;
 	
 }
 

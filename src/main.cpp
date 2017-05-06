@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "Camara.h"
 #include "Model.h"
+#include "Object.h"
 
 #include <SOIL.h>
 //glm
@@ -180,8 +181,9 @@ int main() {
 	backgroundColor.B = 0.1;
 
 	//cargamos los shader
-	//Shader shader("./src/SimpleVertexShader.vertexshader", "./src/SimpleFragmentShader.fragmentshader");
-	Shader shader("./src/SimpleVertexShader.vertexshader", "./src/SimpleFragmentShader.fragmentshader");
+	
+	Shader shaderModelos("./src/modelVertexShader.vertexshader", "./src/modelFragmentShader.fragmentshader");
+	Shader shaderObjetos("./src/objectVertexShader.vertexshader","./src/objectFragmentShader.fragmentshader");
 	
 	//activacion del test de profundidad
 	glEnable(GL_DEPTH_TEST);
@@ -200,7 +202,7 @@ int main() {
 #pragma endregion
 
 #pragma region Matrices
-	scaleVector=glm::vec3(0.01,0.01,0.01);
+	scaleVector=glm::vec3(1,1,1);
 	translateVector = glm::vec3(0,0,0);
 	rotationX = glm::radians(0.f);
 	transformMat1 = glm::scale(transformMat1, scaleVector);
@@ -208,17 +210,21 @@ int main() {
 	scaleVector = glm::vec3(0.1,0.1,0.1);
 	transformMat2 = glm::scale(transformMat2,scaleVector);
 
-	scaleVector = glm::vec3(0.02,0.02,0.02);
+	scaleVector = glm::vec3(0.005,0.005,0.005);
+	//transformMat3 = glm::translate(transformMat3, glm::vec3(0, 0, -10));
 	transformMat3 = glm::scale(transformMat3, scaleVector);
+	
 
 
 #pragma endregion
 
 
-#pragma region Modelos
-	Model nanosuit("./src/nanosuit/nanosuit.obj");
+#pragma region Modelos y objetos
+	/*Model nanosuit("./src/nanosuit/nanosuit.obj");
 	Model casa("./src/casa/casa.obj");
-	Model araña("./src/spider/spider.obj");
+	Model araña("./src/spider/spider.obj");*/
+	//Object::FigureType type= Object::FigureType::cube;
+	Object cubo(glm::vec3 (0.5f,0.5f,0.5f), glm::vec3(0,0,0), glm::vec3 (0,0,0), Object::FigureType::cube);
 #pragma endregion
 
 
@@ -234,39 +240,27 @@ int main() {
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		camara.DoMovement(window);
+		cubo.doMovement(window, camara.deltaTime);
 		//Establecer el color de fondo
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		glClearColor(backgroundColor.R, backgroundColor.G, backgroundColor.B, 1.0);
 
 		//establecer el shader
-		shader.USE();
+		//shaderModelos.USE();
+		shaderObjetos.USE();
 
 		//camara
 		camara.CalculateLookAt();
 
 		projMat = glm::perspective(glm::radians((float)camara.FOV), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
 
+		shaderObjetos.USE();
+	
+		glUniformMatrix4fv(glGetUniformLocation(shaderObjetos.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
+		glUniformMatrix4fv(glGetUniformLocation(shaderObjetos.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
+		glUniformMatrix4fv(glGetUniformLocation(shaderObjetos.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(cubo.GetModelMatrix()));
 		
-		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
-		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
-
-		
-
-		//pintar
-		if (renderModel1) {
-			glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat1));
-			araña.Draw(shader, GL_FRONT_AND_BACK);
-		}
-		else if (renderModel2) {
-			glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat2));
-			nanosuit.Draw(shader, GL_FRONT_AND_BACK);
-		}
-		else if (renderModel3) {
-			glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat3));
-			casa.Draw(shader, GL_FRONT_AND_BACK);
-		}
-		/*glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat1));
-		nanosuit.Draw(shader, GL_FRONT_AND_BACK);*/
+		cubo.Draw();
 
 		glBindVertexArray(0);
 		// Swap the screen buffers
@@ -281,25 +275,7 @@ int main() {
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
 	
-	//salir
-	if (key ==GLFW_KEY_1 && action==GLFW_PRESS) {
-		renderModel1 = true;
-		renderModel2 = false;
-		renderModel3 = false;
-	}
-	else if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
-		renderModel1 = false;
-		renderModel2 = true;
-		renderModel3 = false;
-	
-	}
-	else if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
-		renderModel1 = false;
-		renderModel2 = false;
-		renderModel3 = true;
-
-	}
-	else if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS) {
+	 if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS) {
 		stillGoingOn = false;
 	}
 }

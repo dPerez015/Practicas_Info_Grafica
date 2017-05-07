@@ -1,0 +1,15 @@
+#version 330 core
+
+//in vec3 col;
+
+out vec4 color;
+
+uniform vec3 objectColor;
+uniform vec3 lightColor;
+uniform vec3 specular;
+uniform vec3 ambient;
+uniform vec3 difuse;
+
+void main(){
+	color=vec4(lightColor*objectColor,1);
+}

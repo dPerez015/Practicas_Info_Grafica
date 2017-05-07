@@ -8,6 +8,7 @@
 #include "Camara.h"
 #include "Model.h"
 #include "Object.h"
+#include "Light.h"
 
 #include <SOIL.h>
 //glm
@@ -135,6 +136,8 @@ void MouseScroll(GLFWwindow* window, double xpos, double ypos) {
 	camara.MouseScroll(window, xpos, ypos);
 }
 int main() {
+
+#pragma region init
 	//initGLFW
 	GLFWwindow* window;
 
@@ -182,8 +185,8 @@ int main() {
 
 	//cargamos los shader
 	
-	Shader shaderModelos("./src/modelVertexShader.vertexshader", "./src/modelFragmentShader.fragmentshader");
-	Shader shaderObjetos("./src/objectVertexShader.vertexshader","./src/objectFragmentShader.fragmentshader");
+	//Shader shaderModelos("./src/modelVertexShader.vertexshader", "./src/modelFragmentShader.fragmentshader");
+	//Shader shaderObjetos("./src/objectVertexShader.vertexshader","./src/objectFragmentShader.fragmentshader");
 	
 	//activacion del test de profundidad
 	glEnable(GL_DEPTH_TEST);
@@ -193,6 +196,7 @@ int main() {
 
 	glfwSetCursorPosCallback(window, MouseMov);
 	glfwSetScrollCallback(window, MouseScroll);
+#pragma endregion
 #pragma region Buffers
 
 #pragma endregion
@@ -218,13 +222,17 @@ int main() {
 
 #pragma endregion
 
+#pragma region luz
+	Light luz("./src/ambientLightVertexShader.vertexshader", "./src/ambientLightFragmentShader.fragmentshader", vec3(0,3,0),vec3(255,255,255));
+#pragma endregion
 
 #pragma region Modelos y objetos
 	/*Model nanosuit("./src/nanosuit/nanosuit.obj");
 	Model casa("./src/casa/casa.obj");
 	Model araña("./src/spider/spider.obj");*/
 	//Object::FigureType type= Object::FigureType::cube;
-	Object cubo(glm::vec3 (0.5f,0.5f,0.5f), glm::vec3(0,0,0), glm::vec3 (0,0,0), Object::FigureType::cube);
+	Object cuboA(glm::vec3 (1.f,1.f,1.f), glm::vec3(0,0,0), glm::vec3 (0,0,0),glm::vec3(255.f,127.f,79.f) ,Object::FigureType::cube);
+	
 #pragma endregion
 
 
@@ -240,27 +248,25 @@ int main() {
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		camara.DoMovement(window);
-		cubo.doMovement(window, camara.deltaTime);
+		cuboA.doMovement(window, camara.deltaTime);
+
 		//Establecer el color de fondo
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		glClearColor(backgroundColor.R, backgroundColor.G, backgroundColor.B, 1.0);
 
-		//establecer el shader
-		//shaderModelos.USE();
-		shaderObjetos.USE();
-
 		//camara
 		camara.CalculateLookAt();
-
 		projMat = glm::perspective(glm::radians((float)camara.FOV), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
 
-		shaderObjetos.USE();
+
+		luz.loadLightParams();
+
+
+		glUniformMatrix4fv(glGetUniformLocation(luz.shader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
+		glUniformMatrix4fv(glGetUniformLocation(luz.shader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
+		luz.Draw(camara.viewMat,projMat);
+		cuboA.Draw(luz.shader);
 	
-		glUniformMatrix4fv(glGetUniformLocation(shaderObjetos.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
-		glUniformMatrix4fv(glGetUniformLocation(shaderObjetos.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
-		glUniformMatrix4fv(glGetUniformLocation(shaderObjetos.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(cubo.GetModelMatrix()));
-		
-		cubo.Draw();
 
 		glBindVertexArray(0);
 		// Swap the screen buffers

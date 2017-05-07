@@ -17,10 +17,10 @@ public:
 		cube = 0,
 	};
 
-	Object(vec3 scale, vec3 rotation, vec3 position, FigureType typef);
+	Object(vec3 scale, vec3 rotation, vec3 position, vec3 color,FigureType typef);
 	~Object();
 
-	void Draw();
+	void Draw(Shader);
 	void Move(vec3 translation);
 	void Rotate(vec3 rota);
 	void Scale(vec3 scal);
@@ -34,6 +34,7 @@ private:
 	vec3 position;
 	vec3 scale;
 	vec3 rotation;
+	vec3 color;
 	//movimiento por teclado
 	bool moveStates[4];
 	vec3 nextMove;

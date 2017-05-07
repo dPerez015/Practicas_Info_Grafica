@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Camara.cpp" />
+    <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Model.cpp" />
@@ -28,16 +29,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camara.h" />
+    <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Object.h" />
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\ambientLightFragmentShader.fragmentshader" />
+    <None Include="src\ambientLightVertexShader.vertexshader" />
     <None Include="src\objectFragmentShader.fragmentshader" />
     <None Include="src\objectVertexShader.vertexshader" />
     <None Include="src\modelFragmentShader.fragmentshader" />
     <None Include="src\modelVertexShader.vertexshader" />
+    <None Include="src\phongObjectFragmentShader.fragmentshader" />
+    <None Include="src\phongObjectVertexShader.vertexshader" />
     <None Include="src\textureFragment.fragmentshader" />
     <None Include="src\textureVertex.vertexshader" />
   </ItemGroup>

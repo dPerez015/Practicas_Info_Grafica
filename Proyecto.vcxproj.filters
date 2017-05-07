@@ -39,6 +39,9 @@
     <ClCompile Include="src\Model.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
+    <ClCompile Include="src\Light.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -54,6 +57,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\Model.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Light.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,6 +80,18 @@
       <Filter>Shaders Fragmentos</Filter>
     </None>
     <None Include="src\modelVertexShader.vertexshader">
+      <Filter>Shaders Vertices</Filter>
+    </None>
+    <None Include="src\phongObjectFragmentShader.fragmentshader">
+      <Filter>Shaders Fragmentos</Filter>
+    </None>
+    <None Include="src\phongObjectVertexShader.vertexshader">
+      <Filter>Shaders Vertices</Filter>
+    </None>
+    <None Include="src\ambientLightFragmentShader.fragmentshader">
+      <Filter>Shaders Fragmentos</Filter>
+    </None>
+    <None Include="src\ambientLightVertexShader.vertexshader">
       <Filter>Shaders Vertices</Filter>
     </None>
   </ItemGroup>

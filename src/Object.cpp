@@ -1,6 +1,7 @@
 #include "Object.h"
 
-Object::Object(vec3 scal, vec3 rot, vec3 pos, FigureType typef) {
+Object::Object(vec3 scal, vec3 rot, vec3 pos, vec3 col ,FigureType typef) {
+	color = col/255.f;
 	speed = 2;
 	GLfloat VertexBufferObject[] = {
 		//front
@@ -89,7 +90,10 @@ Object::Object(vec3 scal, vec3 rot, vec3 pos, FigureType typef) {
 
 Object::~Object() {}
 
-void Object::Draw() {
+void Object::Draw(Shader shader) {
+	shader.USE();
+	glUniform3f(glGetUniformLocation(shader.Program, "objectColor"), color.x, color.y, color.z);
+	glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(GetModelMatrix()));
 	glBindVertexArray(VAO);
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	glDrawArrays(GL_TRIANGLES, 0, 36);

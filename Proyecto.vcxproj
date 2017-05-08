@@ -36,14 +36,12 @@
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\ambientLightFragmentShader.fragmentshader" />
-    <None Include="src\ambientLightVertexShader.vertexshader" />
+    <None Include="src\PhongLightBaseFragmentShader.fragmentshader" />
+    <None Include="src\PhongLightBaseVertexShader.vertexshader" />
     <None Include="src\objectFragmentShader.fragmentshader" />
     <None Include="src\objectVertexShader.vertexshader" />
     <None Include="src\modelFragmentShader.fragmentshader" />
     <None Include="src\modelVertexShader.vertexshader" />
-    <None Include="src\phongObjectFragmentShader.fragmentshader" />
-    <None Include="src\phongObjectVertexShader.vertexshader" />
     <None Include="src\textureFragment.fragmentshader" />
     <None Include="src\textureVertex.vertexshader" />
   </ItemGroup>

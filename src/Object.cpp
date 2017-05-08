@@ -2,6 +2,9 @@
 
 Object::Object(vec3 scal, vec3 rot, vec3 pos, vec3 col ,FigureType typef) {
 	color = col/255.f;
+	ambiental = 0.1;
+	specular = 0.5;
+	specularExp = 32;
 	speed = 2;
 	GLfloat VertexBufferObject[] = {
 		//front
@@ -92,7 +95,10 @@ Object::~Object() {}
 
 void Object::Draw(Shader shader) {
 	shader.USE();
-	glUniform3f(glGetUniformLocation(shader.Program, "objectColor"), color.x, color.y, color.z);
+	glUniform1f(glGetUniformLocation(shader.Program, "ambInt"), ambiental);
+	glUniform1f(glGetUniformLocation(shader.Program, "specInt"), specular);
+	glUniform1f(glGetUniformLocation(shader.Program, "Ke"), specularExp);
+	glUniform3f(glGetUniformLocation(shader.Program, "ObjectColor"), color.x, color.y, color.z);
 	glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(GetModelMatrix()));
 	glBindVertexArray(VAO);
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);

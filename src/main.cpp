@@ -223,7 +223,7 @@ int main() {
 #pragma endregion
 
 #pragma region luz
-	Light luz("./src/ambientLightVertexShader.vertexshader", "./src/ambientLightFragmentShader.fragmentshader", vec3(0,3,0),vec3(255,255,255));
+	Light luz("./src/PhongLightBaseVertexShader.vertexshader", "./src/PhongLightBaseFragmentShader.fragmentshader", vec3(-1,1.5f,0.8),vec3(255,255,255));
 #pragma endregion
 
 #pragma region Modelos y objetos
@@ -231,7 +231,7 @@ int main() {
 	Model casa("./src/casa/casa.obj");
 	Model araña("./src/spider/spider.obj");*/
 	//Object::FigureType type= Object::FigureType::cube;
-	Object cuboA(glm::vec3 (1.f,1.f,1.f), glm::vec3(0,0,0), glm::vec3 (0,0,0),glm::vec3(255.f,127.f,79.f) ,Object::FigureType::cube);
+	Object cuboA(glm::vec3 (0.5f,0.5f,0.5f), glm::vec3(0,0,0), glm::vec3 (0,0,0),glm::vec3(255.f,127.f,79.f) ,Object::FigureType::cube);
 	
 #pragma endregion
 
@@ -258,14 +258,17 @@ int main() {
 		camara.CalculateLookAt();
 		projMat = glm::perspective(glm::radians((float)camara.FOV), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
 
-
+		
 		luz.loadLightParams();
 
-
-		glUniformMatrix4fv(glGetUniformLocation(luz.shader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
-		glUniformMatrix4fv(glGetUniformLocation(luz.shader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
-		luz.Draw(camara.viewMat,projMat);
-		cuboA.Draw(luz.shader);
+		glUniform3f(glGetUniformLocation(luz.lightShader.Program, "viewPos"),camara.cameraPos.x, camara.cameraPos.y, camara.cameraPos.z);
+		glUniformMatrix4fv(glGetUniformLocation(luz.lightShader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
+		glUniformMatrix4fv(glGetUniformLocation(luz.lightShader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
+		
+		luz.Draw(camara.viewMat, projMat);
+		cuboA.Draw(luz.lightShader);
+		
+		
 	
 
 		glBindVertexArray(0);

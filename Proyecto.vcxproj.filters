@@ -82,16 +82,10 @@
     <None Include="src\modelVertexShader.vertexshader">
       <Filter>Shaders Vertices</Filter>
     </None>
-    <None Include="src\phongObjectFragmentShader.fragmentshader">
+    <None Include="src\PhongLightBaseFragmentShader.fragmentshader">
       <Filter>Shaders Fragmentos</Filter>
     </None>
-    <None Include="src\phongObjectVertexShader.vertexshader">
-      <Filter>Shaders Vertices</Filter>
-    </None>
-    <None Include="src\ambientLightFragmentShader.fragmentshader">
-      <Filter>Shaders Fragmentos</Filter>
-    </None>
-    <None Include="src\ambientLightVertexShader.vertexshader">
+    <None Include="src\PhongLightBaseVertexShader.vertexshader">
       <Filter>Shaders Vertices</Filter>
     </None>
   </ItemGroup>

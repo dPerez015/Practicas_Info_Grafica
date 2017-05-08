@@ -34,7 +34,12 @@ private:
 	vec3 position;
 	vec3 scale;
 	vec3 rotation;
+	//luz
 	vec3 color;
+	float specular;
+	float specularExp;
+	float ambiental;
+
 	//movimiento por teclado
 	bool moveStates[4];
 	vec3 nextMove;

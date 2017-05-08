@@ -21,6 +21,9 @@ Light::Light( glm::vec3 pos, glm::vec3 dir ,glm::vec3 col, lightType t){
 
 	pLAttenuation = vec3(1, 0.22f, 0.20f);
 
+	appertureMaxAngle = cos(glm::radians(30.f));
+	appertureAnglesSeparation = cos(glm::radians(5.f));
+
 	switch (type){
 	case ambient:
 		lightShader = Shader("./src/PhongAmbientLighVertexShader.vertexshader", "./src/PhongAmbientLightFragmentShader.fragmentshader");
@@ -32,7 +35,7 @@ Light::Light( glm::vec3 pos, glm::vec3 dir ,glm::vec3 col, lightType t){
 		lightShader = Shader("./src/PhongPointLightVertexShader.vertexshader", "./src/PhongPointLightFragmentShader.fragmentshader");
 		break;
 	case focal:
-		lightShader = Shader("./src/PhongFocalLighVertexShader.vertexshader", "./src/PhongFocalLightFragmentShader.fragmentshader");
+		lightShader = Shader("./src/PhongFocalLightVertexShader.vertexshader", "./src/PhongFocalLightFragmentShader.fragmentshader");
 		break;
 	default:
 		break;
@@ -56,7 +59,8 @@ void Light::loadLightParams() {
 		glUniform3f(glGetUniformLocation(lightShader.Program, "attenFact"), pLAttenuation.x, pLAttenuation.y, pLAttenuation.z);
 		break;
 	case focal:
-		glUniform1f(glGetUniformLocation(lightShader.Program, "apperture"), appertureAngle);
+		glUniform1f(glGetUniformLocation(lightShader.Program, "appertureMax"), appertureMaxAngle);
+		glUniform1f(glGetUniformLocation(lightShader.Program, "difumAngle"), appertureAnglesSeparation);
 		glUniform3f(glGetUniformLocation(lightShader.Program, "lightColor"), color.x, color.y, color.z);
 		glUniform3f(glGetUniformLocation(lightShader.Program, "lightPos"), position.x, position.y, position.z);
 		glUniform3f(glGetUniformLocation(lightShader.Program, "focusDir"), direction.x, direction.y, direction.z);

@@ -223,7 +223,7 @@ int main() {
 #pragma endregion
 
 #pragma region luz
-	Light luz(vec3(-1,1.5f,0.8), glm::vec3(0, 0, 0),vec3(255,255,255),lightType::point);
+	Light luz(vec3(-1,1.5f, 0.f), glm::vec3(0, -1, 0),vec3(255,255,255),lightType::focal);
 #pragma endregion
 
 #pragma region Modelos y objetos

@@ -5,7 +5,7 @@
 #include <gtc\matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include "Shader.h"
-
+#include "enums.h"
 
 using namespace glm;
 
@@ -16,11 +16,11 @@ public:
 	enum FigureType {
 		cube = 0,
 	};
-
+	Object();
 	Object(vec3 scale, vec3 rotation, vec3 position, vec3 color,FigureType typef);
 	~Object();
 
-	void Draw(Shader);
+	void Draw(Shader, lightType);
 	void Move(vec3 translation);
 	void Rotate(vec3 rota);
 	void Scale(vec3 scal);

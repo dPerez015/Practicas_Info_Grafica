@@ -62,6 +62,9 @@
     <ClInclude Include="src\Light.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="enums.h">
+      <Filter>Archivos de recursos</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\textureVertex.vertexshader">
@@ -87,6 +90,30 @@
     </None>
     <None Include="src\PhongLightBaseVertexShader.vertexshader">
       <Filter>Shaders Vertices</Filter>
+    </None>
+    <None Include="src\PhongPointLightFragmentShader.fragmentshader">
+      <Filter>Shaders Fragmentos</Filter>
+    </None>
+    <None Include="src\PhongPointLightVertexShader.vertexshader">
+      <Filter>Shaders Vertices</Filter>
+    </None>
+    <None Include="src\PhongAmbientLightFragmentShader.fragmentshader">
+      <Filter>Shaders Fragmentos</Filter>
+    </None>
+    <None Include="src\PhongAmbientLighVertexShader.vertexshader">
+      <Filter>Shaders Vertices</Filter>
+    </None>
+    <None Include="src\PhongDirectionalLighVertexShader.vertexshader">
+      <Filter>Shaders Vertices</Filter>
+    </None>
+    <None Include="src\PhongDirectionalLightFragmentShader.fragmentshader">
+      <Filter>Shaders Fragmentos</Filter>
+    </None>
+    <None Include="src\PhongFocalLightVertexShader.vertexshader">
+      <Filter>Shaders Vertices</Filter>
+    </None>
+    <None Include="src\PhongFocalLightFragmentShader.fragmentshader">
+      <Filter>Shaders Fragmentos</Filter>
     </None>
   </ItemGroup>
 </Project>

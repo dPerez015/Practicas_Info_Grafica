@@ -223,7 +223,7 @@ int main() {
 #pragma endregion
 
 #pragma region luz
-	Light luz("./src/PhongLightBaseVertexShader.vertexshader", "./src/PhongLightBaseFragmentShader.fragmentshader", vec3(-1,1.5f,0.8),vec3(255,255,255));
+	Light luz(vec3(-1,1.5f,0.8), glm::vec3(0, 0, 0),vec3(255,255,255),lightType::point);
 #pragma endregion
 
 #pragma region Modelos y objetos
@@ -231,7 +231,7 @@ int main() {
 	Model casa("./src/casa/casa.obj");
 	Model araña("./src/spider/spider.obj");*/
 	//Object::FigureType type= Object::FigureType::cube;
-	Object cuboA(glm::vec3 (0.5f,0.5f,0.5f), glm::vec3(0,0,0), glm::vec3 (0,0,0),glm::vec3(255.f,127.f,79.f) ,Object::FigureType::cube);
+	Object cuboA(glm::vec3 (0.5f,0.5f,0.5f),glm::vec3(0,0,0), glm::vec3 (0,0,0),glm::vec3(255.f,127.f,79.f) ,Object::FigureType::cube);
 	
 #pragma endregion
 
@@ -266,7 +266,7 @@ int main() {
 		glUniformMatrix4fv(glGetUniformLocation(luz.lightShader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
 		
 		luz.Draw(camara.viewMat, projMat);
-		cuboA.Draw(luz.lightShader);
+		cuboA.Draw(luz.lightShader, luz.type);
 		
 		
 	

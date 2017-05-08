@@ -1,5 +1,5 @@
 #include "Object.h"
-
+Object::Object() {}
 Object::Object(vec3 scal, vec3 rot, vec3 pos, vec3 col ,FigureType typef) {
 	color = col/255.f;
 	ambiental = 0.1;
@@ -93,13 +93,37 @@ Object::Object(vec3 scal, vec3 rot, vec3 pos, vec3 col ,FigureType typef) {
 
 Object::~Object() {}
 
-void Object::Draw(Shader shader) {
+void Object::Draw(Shader shader, lightType t) {
 	shader.USE();
-	glUniform1f(glGetUniformLocation(shader.Program, "ambInt"), ambiental);
-	glUniform1f(glGetUniformLocation(shader.Program, "specInt"), specular);
-	glUniform1f(glGetUniformLocation(shader.Program, "Ke"), specularExp);
-	glUniform3f(glGetUniformLocation(shader.Program, "ObjectColor"), color.x, color.y, color.z);
 	glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(GetModelMatrix()));
+	switch (t){
+	case ambient:
+		glUniform1f(glGetUniformLocation(shader.Program, "ambInt"), ambiental);
+		glUniform3f(glGetUniformLocation(shader.Program, "ObjectColor"), color.x, color.y, color.z);
+		break;
+	case directional:
+		glUniform1f(glGetUniformLocation(shader.Program, "ambInt"), ambiental);
+		glUniform1f(glGetUniformLocation(shader.Program, "specInt"), specular);
+		glUniform1f(glGetUniformLocation(shader.Program, "Ke"), specularExp);
+		glUniform3f(glGetUniformLocation(shader.Program, "ObjectColor"), color.x, color.y, color.z);
+		break;
+	case point:
+		glUniform1f(glGetUniformLocation(shader.Program, "ambInt"), ambiental);
+		glUniform1f(glGetUniformLocation(shader.Program, "specInt"), specular);
+		glUniform1f(glGetUniformLocation(shader.Program, "Ke"), specularExp);
+		glUniform3f(glGetUniformLocation(shader.Program, "ObjectColor"), color.x, color.y, color.z);
+		break;
+	case focal:
+		glUniform1f(glGetUniformLocation(shader.Program, "ambInt"), ambiental);
+		glUniform1f(glGetUniformLocation(shader.Program, "specInt"), specular);
+		glUniform1f(glGetUniformLocation(shader.Program, "Ke"), specularExp);
+		glUniform3f(glGetUniformLocation(shader.Program, "ObjectColor"), color.x, color.y, color.z);
+		break;
+	default:
+		break;
+	}
+
+	
 	glBindVertexArray(VAO);
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	glDrawArrays(GL_TRIANGLES, 0, 36);

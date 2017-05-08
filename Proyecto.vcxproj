@@ -28,6 +28,7 @@
     <ClCompile Include="src\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="enums.h" />
     <ClInclude Include="src\Camara.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\Mesh.h" />
@@ -36,12 +37,20 @@
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\PhongAmbientLightFragmentShader.fragmentshader" />
+    <None Include="src\PhongAmbientLighVertexShader.vertexshader" />
+    <None Include="src\PhongDirectionalLightFragmentShader.fragmentshader" />
+    <None Include="src\PhongDirectionalLighVertexShader.vertexshader" />
+    <None Include="src\PhongFocalLightFragmentShader.fragmentshader" />
+    <None Include="src\PhongFocalLightVertexShader.vertexshader" />
     <None Include="src\PhongLightBaseFragmentShader.fragmentshader" />
     <None Include="src\PhongLightBaseVertexShader.vertexshader" />
     <None Include="src\objectFragmentShader.fragmentshader" />
     <None Include="src\objectVertexShader.vertexshader" />
     <None Include="src\modelFragmentShader.fragmentshader" />
     <None Include="src\modelVertexShader.vertexshader" />
+    <None Include="src\PhongPointLightFragmentShader.fragmentshader" />
+    <None Include="src\PhongPointLightVertexShader.vertexshader" />
     <None Include="src\textureFragment.fragmentshader" />
     <None Include="src\textureVertex.vertexshader" />
   </ItemGroup>

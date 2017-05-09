@@ -40,7 +40,7 @@ private:
 	//luz
 	
 	//movimiento por teclado
-	bool moveStates[4];
+	bool moveStates[6];
 	vec3 nextMove;
 	float speed;
 };

@@ -211,14 +211,19 @@ int main() {
 #pragma endregion
 
 #pragma region luz
-	Light luz(vec3(-1,1.5f, 0.f), glm::vec3(0, -1, 0),vec3(255,255,255),lightType::focal);
+	Shader Multiilum("./src/MultiLight.vertexshader","./src/MultiLight.fragmentshader");
+
+	Light directionalLight(vec3(0, 0, 0.f), glm::vec3(0, -1, -1),vec3(100,100,100),lightType::directional);
+	Light pointLight1(vec3(2,1.f,0), vec3(0,0,0),vec3(255, 0, 0), lightType::point);
+	Light pointLight2(vec3(-2, 1.f, 0), vec3(0, 0, 0), vec3(0, 255, 0), lightType::point);
+	Light focalLight1(vec3(0, 1, 0), vec3(0, -1, 0), vec3(0, 0, 255), lightType::focal);
+	Light focalLight2(vec3(0, 0, -1), vec3(0, 0, 1), vec3(255, 128, 0), lightType::focal);
+
 #pragma endregion
 
 #pragma region Modelos y objetos
 
-	Object cuboA(glm::vec3 (0.5f,0.5f,0.5f),glm::vec3(0,0,0), glm::vec3 (0,0,0),"./src/Materials/difuso2.png", "./src/Materials/especular.png",32.f,Object::FigureType::cube);
-	
-	
+	Object cuboA(glm::vec3 (0.5f,0.5f,0.5f),glm::vec3(0,0,0), glm::vec3 (0,0,0),"./src/Materials/difuso.png", "./src/Materials/especular.png",32.f,Object::FigureType::cube);
 
 
 #pragma endregion
@@ -245,20 +250,27 @@ int main() {
 		camara.CalculateLookAt();
 		projMat = glm::perspective(glm::radians((float)camara.FOV), ((float)screenWithd) / ((float)screenHeight), 0.1f, 200.f);
 
-		
-		luz.loadLightParams();
+		//cargar los parametros de las luces
+		Multiilum.USE();
+		glUniform1i(glGetUniformLocation(Multiilum.Program, "numPointLights"),2);
+		glUniform1i(glGetUniformLocation(Multiilum.Program, "numFocalLights"), 2);
+		directionalLight.loadMultipleLightParams(Multiilum, 0);
+		pointLight1.loadMultipleLightParams(Multiilum,0);
+		pointLight2.loadMultipleLightParams(Multiilum, 1);
+		focalLight1.loadMultipleLightParams(Multiilum, 0);
+		focalLight2.loadMultipleLightParams(Multiilum, 1);
 
-		glUniform3f(glGetUniformLocation(luz.lightShader.Program, "viewPos"),camara.cameraPos.x, camara.cameraPos.y, camara.cameraPos.z);
-		glUniformMatrix4fv(glGetUniformLocation(luz.lightShader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
-		glUniformMatrix4fv(glGetUniformLocation(luz.lightShader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
+		glUniform3f(glGetUniformLocation(Multiilum.Program, "viewPos"),camara.cameraPos.x, camara.cameraPos.y, camara.cameraPos.z);
+		glUniformMatrix4fv(glGetUniformLocation(Multiilum.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(camara.viewMat));
+		glUniformMatrix4fv(glGetUniformLocation(Multiilum.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
 		
-		luz.Draw(camara.viewMat, projMat);
-		
-		
-		luz.lightShader.USE();
-		cuboA.Draw(luz.lightShader);
-		
-		
+		directionalLight.Draw(camara.viewMat, projMat);
+		pointLight1.Draw(camara.viewMat, projMat);
+		pointLight2.Draw(camara.viewMat, projMat);
+		focalLight1.Draw(camara.viewMat, projMat);
+		focalLight2.Draw(camara.viewMat, projMat);
+
+		cuboA.Draw(Multiilum);
 	
 
 		glBindVertexArray(0);

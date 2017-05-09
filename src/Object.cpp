@@ -220,12 +220,24 @@ void Object::doMovement(GLFWwindow* window, GLfloat delta) {
 
 	if (glfwGetKey(window, GLFW_KEY_KP_6) == GLFW_PRESS)moveStates[3] = true;
 	else if (glfwGetKey(window, GLFW_KEY_KP_6) == GLFW_RELEASE)moveStates[3] = false;
+	
+	if (glfwGetKey(window, GLFW_KEY_KP_7) == GLFW_PRESS)moveStates[4] = true;
+	else if (glfwGetKey(window, GLFW_KEY_KP_7) == GLFW_RELEASE)moveStates[4] = false;
+
+	if (glfwGetKey(window, GLFW_KEY_KP_9) == GLFW_PRESS)moveStates[5] = true;
+	else if (glfwGetKey(window, GLFW_KEY_KP_9) == GLFW_RELEASE)moveStates[5] = false;
+
+
+
 
 	nextMove = glm::vec3(0,0,0);
 	if (moveStates[0]) { nextMove.y -= speed; }
 	if (moveStates[1]) { nextMove.y += speed; }
 	if (moveStates[2]) { nextMove.x -= speed; }
 	if (moveStates[3]) { nextMove.x += speed; }
+	if (moveStates[4]) { nextMove.z -= speed; }
+	if (moveStates[5]) { nextMove.z += speed; }
+
 	nextMove *= delta;
 
 	Move(nextMove);

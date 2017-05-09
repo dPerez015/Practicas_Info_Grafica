@@ -39,6 +39,8 @@
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\MultiLight.fragmentshader" />
+    <None Include="src\MultiLight.vertexshader" />
     <None Include="src\PhongAmbientLightFragmentShader.fragmentshader" />
     <None Include="src\PhongAmbientLighVertexShader.vertexshader" />
     <None Include="src\PhongDirectionalLightFragmentShader.fragmentshader" />

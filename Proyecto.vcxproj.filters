@@ -127,5 +127,11 @@
     <None Include="src\TexturePhongPointLightVertexShader.vertexshader">
       <Filter>Shaders Vertices</Filter>
     </None>
+    <None Include="src\MultiLight.fragmentshader">
+      <Filter>Shaders Fragmentos</Filter>
+    </None>
+    <None Include="src\MultiLight.vertexshader">
+      <Filter>Shaders Vertices</Filter>
+    </None>
   </ItemGroup>
 </Project>

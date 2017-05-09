@@ -19,6 +19,8 @@ public:
 	~Light();
 	void loadLightParams();
 	void Draw(glm::mat4 view, glm::mat4 proj);
+	void loadMultipleLightParams(Shader, int );
+
 
 	Shader lightShader;
 	Shader cubeShader;
@@ -26,7 +28,11 @@ public:
 
 	lightType type;
 
-	glm::vec3 color;
+	glm::vec3 amb;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+
+
 	glm::vec3 position;
 	glm::vec3 direction;
 	float appertureMaxAngle;

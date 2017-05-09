@@ -11,7 +11,7 @@ Light::Light( glm::vec3 pos, glm::vec3 dir ,glm::vec3 col, lightType t){
 
 	direction = glm::normalize(dir);
 
-	pLAttenuation = vec3(1, 0.22f, 0.20f);
+	pLAttenuation = vec3(1, 0.35f, 0.44f);
 
 	appertureMaxAngle = cos(glm::radians(30.f));
 	appertureMinAngle = cos(glm::radians(25.f));

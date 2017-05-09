@@ -211,13 +211,16 @@ int main() {
 #pragma endregion
 
 #pragma region luz
-	Light luz(vec3(-1,1.5f, 0.f), glm::vec3(0, -1, 0),vec3(255,255,255),lightType::point);
+	Light luz(vec3(-1,1.5f, 0.f), glm::vec3(0, -1, 0),vec3(255,255,255),lightType::focal);
 #pragma endregion
 
 #pragma region Modelos y objetos
 
-	Object cuboA(glm::vec3 (0.5f,0.5f,0.5f),glm::vec3(0,0,0), glm::vec3 (0,0,0),"./src/Materials/difuso2.png", "./src/Materials/especular2.png",32.f,Object::FigureType::cube);
+	Object cuboA(glm::vec3 (0.5f,0.5f,0.5f),glm::vec3(0,0,0), glm::vec3 (0,0,0),"./src/Materials/difuso2.png", "./src/Materials/especular.png",32.f,Object::FigureType::cube);
 	
+	
+
+
 #pragma endregion
 
 	//bucle de dibujado

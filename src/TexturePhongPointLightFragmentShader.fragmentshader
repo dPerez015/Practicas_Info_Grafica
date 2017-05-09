@@ -11,29 +11,42 @@ in vec3 FragPos;
 in vec2 TexCoord;
 
 uniform vec3 lightColor;
+
 uniform Material material;
 
-uniform vec3 lightAngle;
+uniform vec3 lightPos;
 uniform vec3 viewPos;
+uniform vec3 attenFact;
+
 
 
 void main(){
+	
 	//ambiental
 	vec3 ambient=lightColor*vec3(texture(material.diffuse,TexCoord));
 
 	//difusa
 	vec3 norm=normalize(Normal);
-	vec3 diffuse=max(dot(norm,lightAngle),0.0)*lightColor*vec3(texture(material.diffuse,TexCoord));
+	vec3 lightDir= lightPos-FragPos;
 
+	float distance=length(lightDir);
+
+	lightDir=normalize(lightDir);
+	float diff=max(dot(norm,lightDir),0.0);
+	vec3 diffuse=lightColor*diff*vec3(texture(material.diffuse,TexCoord));
+	
 
 	//especular
 	vec3 viewDir=normalize(viewPos-FragPos);
-	vec3 reflectDir = reflect(-lightAngle, norm);
+	vec3 reflectDir = reflect(-lightDir, norm);
 	float spec=pow(max(dot(viewDir, reflectDir),0.0),material.shininess);
-	vec3 specular=vec3(texture(material.specular,TexCoord))*spec*lightColor;
+	vec3 specular=lightColor*vec3(texture(material.specular,TexCoord))*spec;
 
 
 	vec3 result= ambient+diffuse+specular;
 
-	color=vec4(result,1);
+	float fatt=1/(attenFact.x+attenFact.y*distance+attenFact.z*distance*distance);
+	
+	color=vec4(fatt*result,1);
+	//color=vec4(vec3(texture(diffuse,TexCoord)),1);
 }

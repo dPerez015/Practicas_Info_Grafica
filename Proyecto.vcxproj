@@ -54,6 +54,8 @@
     <None Include="src\PhongPointLightFragmentShader.fragmentshader" />
     <None Include="src\PhongPointLightVertexShader.vertexshader" />
     <None Include="src\textureFragment.fragmentshader" />
+    <None Include="src\TexturePhongPointLightFragmentShader.fragmentshader" />
+    <None Include="src\TexturePhongPointLightVertexShader.vertexshader" />
     <None Include="src\textureVertex.vertexshader" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

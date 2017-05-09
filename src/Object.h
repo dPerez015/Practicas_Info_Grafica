@@ -40,8 +40,9 @@ private:
 	//luz
 	
 	//movimiento por teclado
-	bool moveStates[6];
+	bool moveStates[10];
 	vec3 nextMove;
 	float speed;
+	float angularSpeed;
 };
 

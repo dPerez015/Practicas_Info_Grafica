@@ -4,7 +4,7 @@ Object::Object(vec3 scal, vec3 rot, vec3 pos, char* diffPath, char*specPath, flo
 	:
 	material(Material(diffPath, specPath, shinny))
 {
-
+	angularSpeed = radians(90.f);
 	speed = 2;
 	GLfloat VertexBufferObject[] = {
 		//front
@@ -70,7 +70,7 @@ Object::Object(vec3 scal, vec3 rot, vec3 pos, char* diffPath, char*specPath, flo
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 			//texture coords
 			glEnableVertexAttribArray(2);
-			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 			break;
 		default:
 			break;
@@ -92,7 +92,6 @@ Object::Object(vec3 scal, vec3 rot, vec3 pos, FigureType typef) {
 	
 	speed = 2;
 	GLfloat VertexBufferObject[] = {
-		//front
 		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
 		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
@@ -227,6 +226,18 @@ void Object::doMovement(GLFWwindow* window, GLfloat delta) {
 	if (glfwGetKey(window, GLFW_KEY_KP_9) == GLFW_PRESS)moveStates[5] = true;
 	else if (glfwGetKey(window, GLFW_KEY_KP_9) == GLFW_RELEASE)moveStates[5] = false;
 
+	if (glfwGetKey(window, GLFW_KEY_KP_1) == GLFW_PRESS)moveStates[6] = true;
+	else if (glfwGetKey(window, GLFW_KEY_KP_1) == GLFW_RELEASE)moveStates[6] = false;
+
+	if (glfwGetKey(window, GLFW_KEY_KP_3) == GLFW_PRESS)moveStates[7] = true;
+	else if (glfwGetKey(window, GLFW_KEY_KP_3) == GLFW_RELEASE)moveStates[7] = false;
+
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)moveStates[8] = true;
+	else if (glfwGetKey(window, GLFW_KEY_1) == GLFW_RELEASE)moveStates[8] = false;
+
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)moveStates[9] = true;
+	else if (glfwGetKey(window, GLFW_KEY_2) == GLFW_RELEASE)moveStates[9] = false;
+
 
 
 
@@ -237,6 +248,10 @@ void Object::doMovement(GLFWwindow* window, GLfloat delta) {
 	if (moveStates[3]) { nextMove.x += speed; }
 	if (moveStates[4]) { nextMove.z -= speed; }
 	if (moveStates[5]) { nextMove.z += speed; }
+	if (moveStates[6]) { Rotate(vec3(angularSpeed*delta, 0, 0)); }
+	if (moveStates[7]) { Rotate(vec3(-angularSpeed*delta, 0, 0)); }
+	if (moveStates[8]) { Rotate(vec3(0,angularSpeed*delta, 0)); }
+	if (moveStates[9]) { Rotate(vec3(0,-angularSpeed*delta, 0)); }
 
 	nextMove *= delta;
 

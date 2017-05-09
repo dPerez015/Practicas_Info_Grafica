@@ -272,7 +272,7 @@ int main() {
 
 		cuboA.Draw(Multiilum);
 	
-
+		
 		glBindVertexArray(0);
 		// Swap the screen buffers
 		glfwSwapBuffers(window);

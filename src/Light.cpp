@@ -1,17 +1,9 @@
 #include "Light.h"
 //ambiental
-Light::Light(vec3 col) 
-	:	lightShader(Shader("./src/PhongAmbientLightVertexShader.vertexshader", "./src//PhongAmbientLightFragmentShader.fragmentshader")),
-		cubeShader(Shader("./src/objectVertexShader.vertexshader", "./src/objectFragmentShader.fragmentshader")),
-		cubo(Object(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(0, 0, 0), vec3(0,2,0), col, Object::FigureType::cube))
-{
-	color = col;
-	type = lightType::ambient;
-}
 
 Light::Light( glm::vec3 pos, glm::vec3 dir ,glm::vec3 col, lightType t){
 	cubeShader = Shader("./src/objectVertexShader.vertexshader", "./src/objectFragmentShader.fragmentshader");
-	cubo = Object(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(0, 0, 0), pos, col, Object::FigureType::cube);
+	cubo = Object(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(0, 0, 0), pos, Object::FigureType::cube);
 
 	type = t;
 	color = col/255.f;
@@ -22,7 +14,7 @@ Light::Light( glm::vec3 pos, glm::vec3 dir ,glm::vec3 col, lightType t){
 	pLAttenuation = vec3(1, 0.22f, 0.20f);
 
 	appertureMaxAngle = cos(glm::radians(30.f));
-	appertureAnglesSeparation = cos(glm::radians(5.f));
+	appertureMinAngle = cos(glm::radians(25.f));
 
 	switch (type){
 	case ambient:
@@ -60,7 +52,7 @@ void Light::loadLightParams() {
 		break;
 	case focal:
 		glUniform1f(glGetUniformLocation(lightShader.Program, "appertureMax"), appertureMaxAngle);
-		glUniform1f(glGetUniformLocation(lightShader.Program, "difumAngle"), appertureAnglesSeparation);
+		glUniform1f(glGetUniformLocation(lightShader.Program, "appertureMin"), appertureMinAngle);
 		glUniform3f(glGetUniformLocation(lightShader.Program, "lightColor"), color.x, color.y, color.z);
 		glUniform3f(glGetUniformLocation(lightShader.Program, "lightPos"), position.x, position.y, position.z);
 		glUniform3f(glGetUniformLocation(lightShader.Program, "focusDir"), direction.x, direction.y, direction.z);
@@ -77,7 +69,7 @@ void Light::Draw(mat4 view, mat4 proj) {
 	glUniformMatrix4fv(glGetUniformLocation(cubeShader.Program, "viewMat"), 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(glGetUniformLocation(cubeShader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(proj));
 
-	cubo.Draw(cubeShader,type);
+	cubo.Draw(cubeShader,color);
 }
 Light::~Light(){
 }

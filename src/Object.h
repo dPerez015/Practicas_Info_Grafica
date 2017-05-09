@@ -6,7 +6,7 @@
 #include <gtc/type_ptr.hpp>
 #include "Shader.h"
 #include "enums.h"
-
+#include "material.h"
 using namespace glm;
 
 
@@ -17,10 +17,13 @@ public:
 		cube = 0,
 	};
 	Object();
-	Object(vec3 scale, vec3 rotation, vec3 position, vec3 color,FigureType typef);
+	Object(vec3 scale, vec3 rotation, vec3 position,FigureType typef);
+	Object(vec3 scale, vec3 rotation, vec3 position, char* diffPath,char*specPath, float shinny,FigureType typef);
+
 	~Object();
 
-	void Draw(Shader, lightType);
+	void Draw(Shader, vec3 color);
+	void Draw(Shader);
 	void Move(vec3 translation);
 	void Rotate(vec3 rota);
 	void Scale(vec3 scal);
@@ -28,18 +31,14 @@ public:
 	void Delete();
 	mat4 GetModelMatrix();
 	vec3 GetPosition();
-
+	Material material;
 private:
 	GLuint VBO, VAO, EBO;
 	vec3 position;
 	vec3 scale;
 	vec3 rotation;
 	//luz
-	vec3 color;
-	float specular;
-	float specularExp;
-	float ambiental;
-
+	
 	//movimiento por teclado
 	bool moveStates[4];
 	vec3 nextMove;

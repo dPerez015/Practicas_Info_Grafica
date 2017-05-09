@@ -10,7 +10,7 @@ uniform vec3 lightColor;
 
 
 uniform float appertureMax;
-uniform float difumAngle;
+uniform float appertureMin;
 uniform vec3 focusDir;
 
 uniform vec3 lightPos;
@@ -40,12 +40,13 @@ if(theta> appertureMax){
 	float spec=pow(max(dot(viewDir, reflectDir),0.0),Ke);
 	vec3 specular=specInt*spec*lightColor;
 
-	float I=clamp((theta - appertureMax)/difumAngle,0.0,1.0);
+	float I=clamp((theta - appertureMax)/(appertureMin-appertureMax),0.0,1.0);
 
 	vec3 result= (lightColor*ambInt)+((diffuse+specular)*I);
 
 
 	color=vec4(result*ObjectColor,1);
+	
 	}
 	else{
 	color=vec4(lightColor*ambInt*ObjectColor,1);

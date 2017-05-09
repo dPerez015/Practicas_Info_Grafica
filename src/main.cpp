@@ -183,11 +183,6 @@ int main() {
 	backgroundColor.G = 0.1;
 	backgroundColor.B = 0.1;
 
-	//cargamos los shader
-	
-	//Shader shaderModelos("./src/modelVertexShader.vertexshader", "./src/modelFragmentShader.fragmentshader");
-	//Shader shaderObjetos("./src/objectVertexShader.vertexshader","./src/objectFragmentShader.fragmentshader");
-	
 	//activacion del test de profundidad
 	glEnable(GL_DEPTH_TEST);
 	
@@ -196,13 +191,6 @@ int main() {
 
 	glfwSetCursorPosCallback(window, MouseMov);
 	glfwSetScrollCallback(window, MouseScroll);
-#pragma endregion
-#pragma region Buffers
-
-#pragma endregion
-#pragma region Texturas	
-	//texturas
-
 #pragma endregion
 
 #pragma region Matrices
@@ -223,18 +211,14 @@ int main() {
 #pragma endregion
 
 #pragma region luz
-	Light luz(vec3(-1,1.5f, 0.f), glm::vec3(0, -1, 0),vec3(255,255,255),lightType::focal);
+	Light luz(vec3(-1,1.5f, 0.f), glm::vec3(0, -1, 0),vec3(255,255,255),lightType::point);
 #pragma endregion
 
 #pragma region Modelos y objetos
-	/*Model nanosuit("./src/nanosuit/nanosuit.obj");
-	Model casa("./src/casa/casa.obj");
-	Model araña("./src/spider/spider.obj");*/
-	//Object::FigureType type= Object::FigureType::cube;
-	Object cuboA(glm::vec3 (0.5f,0.5f,0.5f),glm::vec3(0,0,0), glm::vec3 (0,0,0),glm::vec3(255.f,127.f,79.f) ,Object::FigureType::cube);
+
+	Object cuboA(glm::vec3 (0.5f,0.5f,0.5f),glm::vec3(0,0,0), glm::vec3 (0,0,0),"./src/Materials/difuso2.png", "./src/Materials/especular2.png",32.f,Object::FigureType::cube);
 	
 #pragma endregion
-
 
 	//bucle de dibujado
 	camara.lastFrameTime = glfwGetTime();
@@ -266,7 +250,10 @@ int main() {
 		glUniformMatrix4fv(glGetUniformLocation(luz.lightShader.Program, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
 		
 		luz.Draw(camara.viewMat, projMat);
-		cuboA.Draw(luz.lightShader, luz.type);
+		
+		
+		luz.lightShader.USE();
+		cuboA.Draw(luz.lightShader);
 		
 		
 	

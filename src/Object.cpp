@@ -1,58 +1,140 @@
 #include "Object.h"
 Object::Object() {}
-Object::Object(vec3 scal, vec3 rot, vec3 pos, vec3 col ,FigureType typef) {
-	color = col/255.f;
-	ambiental = 0.1;
-	specular = 0.5;
-	specularExp = 32;
+Object::Object(vec3 scal, vec3 rot, vec3 pos, char* diffPath, char*specPath, float shinny, FigureType typef)
+	:
+	material(Material(diffPath, specPath, shinny))
+{
+
 	speed = 2;
 	GLfloat VertexBufferObject[] = {
 		//front
-		1.0f ,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f,
-		1.0f , -1.0f, -1.0f,  0.0f,  0.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f,
-		1.0f ,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+		0.5f ,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
 		//back
-		-1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-		1.0f , -1.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-		1.0f ,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-
-		1.0f ,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-		-1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-		-1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-		//left
-		-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f,
-		-1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f,
-		-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f,
-		-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f,
-		-1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f,
-		-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+		//left	
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 		//right
-		1.0f , -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,
-		1.0f ,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f,
-		1.0f ,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,
-
-		1.0f ,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,
-		1.0f , -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,
-		1.0f , -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
 		//down
-		-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f,
-		1.0f , -1.0f, -1.0f,  0.0f, -1.0f,  0.0f,
-		1.0f , -1.0f,  1.0f,  0.0f, -1.0f,  0.0f,
-		1.0f , -1.0f,  1.0f,  0.0f, -1.0f,  0.0f,
-		-1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f,
-		-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 		//up
-		1.0f ,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-		1.0f ,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-		-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-		-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-		-1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-		1.0f ,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f
 	};
+#pragma region Buffers
 
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO); {
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		switch (typef) {
+		case Object::cube:
+			glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBufferObject), &VertexBufferObject[0], GL_STATIC_DRAW);
+
+			//posiciones
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+			//normales
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+			//texture coords
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+			break;
+		default:
+			break;
+		}
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}glBindVertexArray(0);
+#pragma endregion
+
+#pragma region Transform
+	position = pos;
+	scale = scal;
+	rotation = rot;
+#pragma endregion
+
+}
+
+Object::Object(vec3 scal, vec3 rot, vec3 pos, FigureType typef) {	
+	
+	speed = 2;
+	GLfloat VertexBufferObject[] = {
+		//front
+		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+		0.5f ,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+		//back
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+		//left	
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		//right
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+		//down
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+		//up
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f
+	};
 #pragma region Buffers
 
 	glGenVertexArrays(1,&VAO);
@@ -67,11 +149,13 @@ Object::Object(vec3 scal, vec3 rot, vec3 pos, vec3 col ,FigureType typef) {
 			
 			//posiciones
 			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE,6*sizeof(GLfloat), (GLvoid*)0);
+			glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE,8*sizeof(GLfloat), (GLvoid*)0);
 			//normales
 			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat),(GLvoid*)(3 * sizeof(GLfloat)));
-
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat),(GLvoid*)(3 * sizeof(GLfloat)));
+			//texture coords
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 			break;
 		default:
 			break;
@@ -92,37 +176,22 @@ Object::Object(vec3 scal, vec3 rot, vec3 pos, vec3 col ,FigureType typef) {
 
 
 Object::~Object() {}
+void Object::Draw(Shader shad, vec3 col) {
+	glUniform3f(glGetUniformLocation(shad.Program, "ObjectColor"), col.x, col.y, col.z);
+	glUniformMatrix4fv(glGetUniformLocation(shad.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(GetModelMatrix()));
+	glBindVertexArray(VAO);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
 
-void Object::Draw(Shader shader, lightType t) {
+void Object::Draw(Shader shader) {
 	shader.USE();
 	glUniformMatrix4fv(glGetUniformLocation(shader.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(GetModelMatrix()));
-	switch (t){
-	case ambient:
-		glUniform1f(glGetUniformLocation(shader.Program, "ambInt"), ambiental);
-		glUniform3f(glGetUniformLocation(shader.Program, "ObjectColor"), color.x, color.y, color.z);
-		break;
-	case directional:
-		glUniform1f(glGetUniformLocation(shader.Program, "ambInt"), ambiental);
-		glUniform1f(glGetUniformLocation(shader.Program, "specInt"), specular);
-		glUniform1f(glGetUniformLocation(shader.Program, "Ke"), specularExp);
-		glUniform3f(glGetUniformLocation(shader.Program, "ObjectColor"), color.x, color.y, color.z);
-		break;
-	case point:
-		glUniform1f(glGetUniformLocation(shader.Program, "ambInt"), ambiental);
-		glUniform1f(glGetUniformLocation(shader.Program, "specInt"), specular);
-		glUniform1f(glGetUniformLocation(shader.Program, "Ke"), specularExp);
-		glUniform3f(glGetUniformLocation(shader.Program, "ObjectColor"), color.x, color.y, color.z);
-		break;
-	case focal:
-		glUniform1f(glGetUniformLocation(shader.Program, "ambInt"), ambiental);
-		glUniform1f(glGetUniformLocation(shader.Program, "specInt"), specular);
-		glUniform1f(glGetUniformLocation(shader.Program, "Ke"), specularExp);
-		glUniform3f(glGetUniformLocation(shader.Program, "ObjectColor"), color.x, color.y, color.z);
-		break;
-	default:
-		break;
-	}
-
+	//material.ActivateTextures();
+	material.SetMaterial(shader);
+	material.SetShininess(shader);
+	//material.ActivateTextures();
 	
 	glBindVertexArray(VAO);
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);

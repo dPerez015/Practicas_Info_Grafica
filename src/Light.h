@@ -30,7 +30,7 @@ public:
 	glm::vec3 position;
 	glm::vec3 direction;
 	float appertureMaxAngle;
-	float appertureAnglesSeparation;
+	float appertureMinAngle;
 	vec3 pLAttenuation;
 	
 };

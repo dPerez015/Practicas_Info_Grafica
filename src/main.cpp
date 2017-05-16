@@ -199,7 +199,7 @@ int main() {
 	rotationX = glm::radians(0.f);
 	transformMat1 = glm::scale(transformMat1, scaleVector);
 
-	scaleVector = glm::vec3(0.1,0.1,0.1);
+	scaleVector = glm::vec3(0.05,0.05,0.05);
 	transformMat2 = glm::scale(transformMat2,scaleVector);
 
 	scaleVector = glm::vec3(0.005,0.005,0.005);
@@ -224,7 +224,7 @@ int main() {
 #pragma region Modelos y objetos
 
 	Object cuboA(glm::vec3 (0.5f,0.5f,0.5f),glm::vec3(0,0,0), glm::vec3 (0,0,0),"./src/Materials/difuso.png", "./src/Materials/especular.png",32.f,Object::FigureType::cube);
-
+	Model nanosuit("./src/nanosuit/nanosuit.obj");
 
 #pragma endregion
 
@@ -271,7 +271,9 @@ int main() {
 		focalLight2.Draw(camara.viewMat, projMat);
 
 		cuboA.Draw(Multiilum);
-	
+		
+		glUniformMatrix4fv(glGetUniformLocation(Multiilum.Program, "transformMat"), 1, GL_FALSE, glm::value_ptr(transformMat2));
+		nanosuit.Draw(Multiilum, GL_FRONT_AND_BACK);
 		
 		glBindVertexArray(0);
 		// Swap the screen buffers
@@ -289,5 +291,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	 if (key == GLFW_KEY_ESCAPE&&action == GLFW_PRESS) {
 		stillGoingOn = false;
 	}
+	 else if (key==GLFW_KEY_8) {
+		 transformMat2 = translate(transformMat2, vec3(8,0,0)*camara.deltaTime);
+	 }
+	 else if (key == GLFW_KEY_9) {
+		 transformMat2 = translate(transformMat2, vec3(-8, 0, 0)*camara.deltaTime);
+	 }
 }
 

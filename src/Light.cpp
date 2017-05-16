@@ -7,7 +7,7 @@ Light::Light( glm::vec3 pos, glm::vec3 dir ,glm::vec3 col, lightType t){
 
 	type = t;
 	amb = vec3(0.1f, 0.1f, 0.1f);
-	specular = vec3(1.f, 1.f, 1.f);
+	specular = vec3(0.5f, 0.5f, 0.5f);
 	diffuse = col / 255.f;
 
 	position = pos;
